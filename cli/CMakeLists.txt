@@ -6,8 +6,16 @@ file(GLOB_RECURSE CPP_FILES src/*.cpp)
 
 add_definitions(${library_DEFINITIONS})
 
-include_directories(${library_INCLUDE_DIRS})
+
 
 add_executable(${PROJECT_NAME} ${CPP_FILES})
 
+if(WIN32)
+add_dependencies(${PROJECT_NAME} WIL)
+target_link_libraries(${PROJECT_NAME} WIL)
+endif()
+
+add_dependencies(${PROJECT_NAME} library)
 target_link_libraries(${PROJECT_NAME} library)
+
+include_directories(${PROJECT_SOURCE_DIR}/include ${library_INCLUDE_DIRS} ${WIL_INCLUDE_DIRS})

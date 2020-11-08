@@ -4,29 +4,31 @@ cmake_minimum_required(VERSION 3.10)
 project(library)
 
 # Find all C++ Source Files
-file(GLOB_RECURSE UNIVERSAL_CPP_FILES src/core/*.cpp src/process/*.cpp)
+file(GLOB_RECURSE 
+    UNIVERSAL_SOURCES 
+    src/piston/core/*.cpp 
+    include/piston/core/*.h 
+    src/piston/process/*.cpp 
+    include/piston/process/*.h
+)
 
 if(WIN32)
-    add_compile_definitions(PISTON_OS_WINDOWS)
+    file(GLOB_RECURSE PLATFORM_SOURCES src/piston/platform/windows/*.cpp include/piston/platform/*.h)
+    
 elseif(APPLE)
-    add_compile_definitions(PISTON_OS_MAC)
+    file(GLOB_RECURSE PLATFORM_SOURCES src/piston/platform/mac/*.cpp include/piston/platform/*.h)
 elseif(UNIX)
-    add_compile_definitions(PISTON_OS_LINUX)
+    file(GLOB_RECURSE PLATFORM_SOURCES src/piston/platform/linux/*.cpp include/piston/platform/*.h)
 endif()
 
-if(WIN32)
-file(GLOB_RECURSE PLATFORM_CPP_FILES src/platform/windows/*.cpp)
-elseif(APPLE)
-file(GLOB_RECURSE PLATFORM_CPP_FILES src/platform/mac/*.cpp)
-elseif(UNIX)
-file(GLOB_RECURSE PLATFORM_CPP_FILES src/platform/linux/*.cpp)
-endif()
+set(SOURCE_LIST ${UNIVERSAL_SOURCES} ${PLATFORM_SOURCES})
 
 # Generate a shared library
-add_library(${PROJECT_NAME} SHARED ${UNIVERSAL_CPP_FILES} ${PLATFORM_CPP_FILES})
+add_library(${PROJECT_NAME} STATIC ${SOURCE_LIST})
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
 
 # Add the library include directory
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
+include_directories(${PROJECT_SOURCE_DIR}/include ${WIL_INCLUDE_DIRS})
 # Set the exported include directories for this library
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
