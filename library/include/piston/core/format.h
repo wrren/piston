@@ -6,11 +6,18 @@
 
 namespace piston
 {
-    template<typename T, typename ...Args>
-    std::wstring wformat(T first, Args... rest)
+    template<typename T>
+    std::wstring wformat(std::wstringstream* stream, T last)
     {
-        std::wstringstream stream;
-        return wformat(stream, first, rest...);
+        (*stream) << last;
+        return stream->str();
+    }
+
+    template<typename T, typename ...Args>
+    std::wstring wformat(std::wstringstream* stream, T first, Args... rest)
+    {
+        (*stream) << first;
+        return wformat(stream, rest...);
     }
 
     template<typename T>
@@ -22,24 +29,24 @@ namespace piston
     }
 
     template<typename T, typename ...Args>
-    std::wstring wformat(std::wstringstream& stream, T first, Args... rest)
+    std::wstring wformat(T first, Args... rest)
     {
-        stream << first;
-        return wformat(stream, rest...);
+        std::wstringstream stream;
+        return wformat(&stream, first, rest...);
     }
 
     template<typename T>
-    std::wstring wformat(std::wstringstream& stream, T last)
+    std::string format(std::stringstream* stream, T last)
     {
-        stream << last;
-        return stream.str();
+        (*stream) << last;
+        return stream->str();
     }
 
     template<typename T, typename ...Args>
-    std::string format(T first, Args... rest)
+    std::string format(std::stringstream* stream, T first, Args... rest)
     {
-        std::stringstream stream;
-        return format(stream, first, rest...);
+        (*stream) << first;
+        return format(stream, rest...);
     }
 
     template<typename T>
@@ -49,19 +56,12 @@ namespace piston
         stream << first;
         return stream.str();
     }
-
+    
     template<typename T, typename ...Args>
-    std::string format(std::stringstream& stream, T first, Args... rest)
+    std::string format(T first, Args... rest)
     {
-        stream << first;
-        return format(stream, rest...);
-    }
-
-    template<typename T>
-    std::string format(std::stringstream& stream, T last)
-    {
-        stream << last;
-        return stream.str();
+        std::stringstream stream;
+        return format(&stream, first, rest...);
     }
 }
 
