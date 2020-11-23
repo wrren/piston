@@ -1,9 +1,10 @@
 #include <operations.h>
+#include <piston/file/pe.h>
 #include <piston/process/injector.h>
 
 namespace piston::cli
 {
-    void list(std::wostream& output_stream, std::ostream& error_stream)
+    void list(std::ostream& output_stream, std::ostream& error_stream)
     {
         piston::process::list_type processes;
 
@@ -28,6 +29,33 @@ namespace piston::cli
         {
             auto injector = injector::inject(library_path, process_id);
             output_stream << "Library injected into process ID" << process_id << std::endl;
+        }
+        catch(const std::exception& e)
+        {
+            error_stream << e.what() << std::endl;
+        }
+    }
+
+    void read_file(std::ostream& output_stream, std::ostream& error_stream, const piston::path path)
+    {
+        try
+        {
+            auto file = pe_file(path);
+            
+            if(!file.read())
+            {
+                error_stream << "Error during file read." << std::endl;
+                return;
+            }
+
+            if(!file.is_valid())
+            {
+                error_stream << "PE file invalid." << std::endl;
+                return;
+            }
+
+
+            output_stream << "PE file valid!" << std::endl;
         }
         catch(const std::exception& e)
         {

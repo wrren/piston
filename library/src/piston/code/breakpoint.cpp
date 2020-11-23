@@ -10,7 +10,7 @@ namespace piston
     m_message(message)
     {}
 
-    const char* breakpoint::check_exception::what() const
+    const char* breakpoint::check_exception::what() const noexcept
     {
         return m_message.c_str();
     }
@@ -19,7 +19,7 @@ namespace piston
     m_message(message)
     {}
 
-    const char* breakpoint::set_exception::what() const
+    const char* breakpoint::set_exception::what() const noexcept
     {
         return m_message.c_str();
     }
@@ -53,14 +53,15 @@ namespace piston
     {
         std::lock_guard<std::mutex> guard(g_mutex);
         g_breakpoints.erase(std::remove(g_breakpoints.begin(), g_breakpoints.end(), *this), g_breakpoints.end());
-        unset(m_register);
+        unset(m_register, breakpoint::scope::BP_SCOPE_GLOBAL);
+        unset(m_register, breakpoint::scope::BP_SCOPE_THREAD);
     }
 
     bool breakpoint::operator==(const breakpoint& other) const
     {
-        return  m_scope         == other.m_breakpoint   &&
+        return  m_scope         == other.m_scope   &&
                 m_handler       == other.m_handler      &&
-                m_breakpoint    == other.m_breakpoint   &&
+                m_address    == other.m_address   &&
                 m_register      == other.m_register     &&
                 m_size          == other.m_size;
     }

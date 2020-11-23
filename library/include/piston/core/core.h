@@ -3,6 +3,7 @@
 
 #include <piston/core/types.h>
 #include <piston/core/format.h>
+#include <piston/core/serializable.h>
 #include <piston/platform/types.h>
 
 #endif // PISTON_CORE_H

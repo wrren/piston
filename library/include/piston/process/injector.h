@@ -40,7 +40,7 @@ namespace piston
              * 
              * @return Exception message
              */
-            virtual const char* what() const override;
+            virtual const char* what() const noexcept override;
 
         private:
 

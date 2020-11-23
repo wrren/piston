@@ -26,7 +26,7 @@ namespace piston
 		return m_id == process_id;
 	}
 
-	const char *process::list_exception::what() const
+	const char *process::list_exception::what() const noexcept
 	{
 		return "An exception occurred while attempting to enumerate running processes.";
 	}

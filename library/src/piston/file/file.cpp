@@ -1,4 +1,6 @@
 #include <piston/file/file.h>
+#include <piston/core/format.h>
+#include <fstream>
 
 namespace piston
 {
@@ -14,8 +16,41 @@ namespace piston
         return m_path;
     }
 
-    path& file::operator=(const path& path)
+    file& file::operator=(const path& path)
     {
         m_path = path;
+        return *this;
+    }
+
+    bool file::read()
+    {
+        if(!std::filesystem::exists(m_path))
+        {
+            return false;
+        }
+
+        std::fstream stream(m_path);
+        if(!stream.is_open())
+        {
+            return false;
+        }
+
+        return deserialize(stream);
+    }
+
+    bool file::write()
+    {
+        if(!std::filesystem::exists(m_path))
+        {
+            return false;
+        }
+
+        std::fstream stream(m_path);
+        if(!stream.is_open())
+        {
+            return false;
+        }
+
+        return serialize(stream);
     }
 }

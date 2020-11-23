@@ -13,7 +13,7 @@ namespace piston::cli
      * @param output_stream Output stream to which list outputs should be sent
      * @param error_stream Output stream to which error messages should be sent
      */
-    void list(std::wostream& output_stream, std::ostream& error_stream);
+    void list(std::ostream& output_stream, std::ostream& error_stream);
 
     /**
      * @brief Attempt to inject the library at the given path into the process with the given ID
@@ -24,6 +24,15 @@ namespace piston::cli
      * @param process_id ID of the process into which the library should be injected
      */
     void inject_into_process(std::ostream& output_stream, std::ostream& error_stream, const piston::injector::library_path& library_path, piston::process::id_type process_id);
+
+    /**
+     * @brief Attempt to read the given file as a PE file
+     * 
+     * @param output_stream Output stream to which injection operation messages should be sent
+     * @param error_stream Output stream to which error messages should be sent
+     * @param path Path to the file
+     */
+    void read_file(std::ostream& output_stream, std::ostream& error_stream, const piston::path path);
 }
 
 #endif // PISTON_CLI_OPERATIONS_H

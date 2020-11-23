@@ -27,7 +27,7 @@ namespace piston
     m_what(what)
     {}
 
-    const char* injector::injection_exception::what() const
+    const char* injector::injection_exception::what() const noexcept
     {
         return m_what.c_str();
     }

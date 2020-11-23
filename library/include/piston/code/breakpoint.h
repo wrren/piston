@@ -31,7 +31,7 @@ namespace piston
              * 
              * @return const char* 
              */
-            virtual const char* what() const override;
+            virtual const char* what() const noexcept override;
 
         private:
 
@@ -59,7 +59,7 @@ namespace piston
              * 
              * @return const char* 
              */
-            virtual const char* what() const override;
+            virtual const char* what() const noexcept override;
 
         private:
 

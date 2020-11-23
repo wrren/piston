@@ -1,46 +1,13 @@
 #ifndef PISTON_FILE_H
 #define PISTON_FILE_H
 
-#include <piston/core/types.h>
+#include <piston/core/core.h>
 
 namespace piston
 {
-    class file
+    class file : public serializable
     {
     public:
-
-        class parse_exception : public std::exception
-        {
-        public:
-
-            /**
-             * @brief Construct a new parse exception object
-             * 
-             * @param path 
-             */
-            parse_exception(const path& path);
-
-            /**
-             * @brief Construct a new parse exception object
-             * 
-             * @param message 
-             */
-            parse_exception(const string& message);
-
-            /**
-             * @brief Return a human-readable description of this exception
-             * 
-             * @return const char* 
-             */
-            virtual const char* what() const override;
-
-        private:
-
-            string m_message;
-
-            path m_path;
-        };
-
         typedef std::shared_ptr<file> ptr_type;
 
         /**
@@ -69,7 +36,25 @@ namespace piston
          * @param path New path
          * @return path& 
          */
-        virtual path& operator=(const path& path);
+        file& operator=(const path& path);
+
+        /**
+         * @brief Read data from the file. Calls deserialize() using the file's file stream, child classes should
+         * override the deserialize() method in order to implement specific read behaviour.
+         * 
+         * @return true If file deserialization succeeded.
+         * @return false Otherwise.
+         */
+        bool read();
+
+        /**
+         * @brief Write data to the file. Calls serialize() using the file's file stream, child classes should override
+         * the serialize() method in order to implement specific write behaviour
+         * 
+         * @return true If file serialization succeeded.
+         * @return false Otherwise.
+         */
+        bool write();
 
     private:
 

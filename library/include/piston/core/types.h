@@ -10,10 +10,10 @@
 
 namespace piston
 {
-  typedef std::wstring string;
-
-  typedef std::wstringstream string_stream;
-
+  typedef std::string string;
+  typedef std::wstring wstring;
+  typedef std::stringstream stringstream;
+  typedef std::wstringstream wstringstream;
   typedef std::filesystem::path path;
 }
 
