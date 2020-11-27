@@ -14,6 +14,11 @@ namespace piston
         return m_dos_header.is_valid();
     }
 
+    const dos_header& pe_file::get_dos_header() const 
+    {
+        return m_dos_header;
+    }
+
     bool pe_file::deserialize(std::istream& stream)
     {
         return m_dos_header.deserialize(stream);

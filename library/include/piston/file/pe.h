@@ -32,6 +32,13 @@ namespace piston
         bool is_valid() const;
 
         /**
+         * @brief Get the DOS header for this PE file
+         * 
+         * @return const dos_header& DOS header
+         */
+        const dos_header& get_dos_header() const;
+
+        /**
          * @brief Deserialize PE Format data from the given stream
          * 
          * @param stream Input Stream

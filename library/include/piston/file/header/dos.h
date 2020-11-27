@@ -3,6 +3,7 @@
 
 #include <piston/core/core.h>
 #include <piston/file/header/header.h>
+#include <piston/core/buffer.h>
 
 #define DOS_HEADER_SIZE 64
 
@@ -13,7 +14,12 @@ namespace piston
     public:
 
         // DOS MZ Magic Number
-        static const uint16_t e_magic;
+        static const uint16_t k_magic;
+
+        // Magic Value
+        buffer_ref<uint16_t> e_magic;
+        // Offset to PE header
+        buffer_ref<uint32_t> e_ifanew;
 
         /**
          * @brief Construct a new DOS header

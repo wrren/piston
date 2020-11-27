@@ -50,12 +50,12 @@ namespace piston::cli
 
             if(!file.is_valid())
             {
-                error_stream << "PE file invalid." << std::endl;
+                error_stream << "PE file invalid. magic value: " << std::hex << file.get_dos_header().e_magic << ", expected " << std::hex << file.get_dos_header().k_magic << std::endl;
                 return;
             }
 
 
-            output_stream << "PE file valid!" << std::endl;
+            output_stream << "PE file valid! PE Offset: " << std::hex << file.get_dos_header().e_ifanew << std::endl;
         }
         catch(const std::exception& e)
         {

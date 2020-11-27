@@ -3,9 +3,11 @@
 
 namespace piston
 {
-    const uint16_t dos_header::e_magic = 0x54AD;
+    const uint16_t dos_header::k_magic = 0x5A4D;
 
-    dos_header::dos_header()
+    dos_header::dos_header() :
+    e_magic(m_data, 0),
+    e_ifanew(m_data, 60)
     {
         memset(m_data, 0, DOS_HEADER_SIZE);
     }
@@ -22,6 +24,6 @@ namespace piston
 
     bool dos_header::is_valid() const
     {
-        return reinterpret_cast<const uint16_t*>(m_data)[0] == e_magic;
+        return reinterpret_cast<const uint16_t*>(m_data)[0] == k_magic;
     }
 }
