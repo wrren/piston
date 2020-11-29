@@ -24,6 +24,22 @@ namespace piston
 
     bool dos_header::is_valid() const
     {
-        return reinterpret_cast<const uint16_t*>(m_data)[0] == k_magic;
+        return e_magic == k_magic;
     }
+
+    size_t dos_header::size() const 
+    {
+        return DOS_HEADER_SIZE;
+    }
+
+    header::ptr_type dos_header::data() 
+    {
+        return &(m_data[0]);
+    }
+
+    header::const_ptr_type dos_header::data() const 
+    {
+        return &(m_data[0]);
+    }
+
 }

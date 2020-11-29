@@ -28,8 +28,8 @@ endif()
 # Set the combined source list for the project
 set(SOURCE_LIST ${UNIVERSAL_SOURCES} ${PLATFORM_SOURCES})
 
-# Generate a shared library
-add_library(${PROJECT_NAME} STATIC ${SOURCE_LIST})
+# Generate a static library
+add_library(${PROJECT_NAME} OBJECT ${SOURCE_LIST})
 
 # Generate a source file tree for IDEs like Visual Studio
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})

@@ -53,6 +53,21 @@ namespace piston
          */
         virtual bool is_valid() const override;
 
+        /**
+         * @brief Get the size, in bytes, of this header
+         * 
+         * @return size_t Header size in bytes
+         */
+        virtual size_t size() const override;
+
+        /**
+         * @brief Get a pointer to the start of this header's data
+         * 
+         * @return ptr_type Pointer to header data
+         */
+        virtual ptr_type data() override;
+        virtual const_ptr_type data() const override;
+
     private:
 
         // Header Data

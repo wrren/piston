@@ -1,6 +1,10 @@
 #include <operations.h>
 #include <piston/file/pe.h>
 #include <piston/process/injector.h>
+#include <thread>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 namespace piston::cli
 {
@@ -23,12 +27,39 @@ namespace piston::cli
         }
     }
 
+    void load(std::ostream& output_stream, std::ostream& error_stream, const piston::path& library_path)
+    {
+        auto module = LoadLibraryA(library_path.string().c_str());
+        if(module == NULL)
+        {
+            error_stream << "Failed to Load Library: " << GetLastError() << std::endl;
+        }
+        else
+        {
+            output_stream << "Library Loaded!" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+        }
+    }
+
     void inject_into_process(std::ostream& output_stream, std::ostream& error_stream, const piston::injector::library_path& library_path, piston::process::id_type process_id)
     {
         try
         {
             auto injector = injector::inject(library_path, process_id);
-            output_stream << "Library injected into process ID" << process_id << std::endl;
+            output_stream << "Library injected into process ID " << injector.get_process_id() << std::endl;
+        }
+        catch(const std::exception& e)
+        {
+            error_stream << e.what() << std::endl;
+        }
+    }
+
+    void inject_into_executable(std::ostream& output_stream, std::ostream& error_stream, const piston::injector::library_path& library_path, const piston::injector::executable_path& executable_path, const piston::injector::argument_list& arguments)
+    {
+        try
+        {
+            auto injector = injector::inject(library_path, executable_path, arguments);
+            output_stream << "Library injected into process ID " << injector.get_process_id() << std::endl;
         }
         catch(const std::exception& e)
         {

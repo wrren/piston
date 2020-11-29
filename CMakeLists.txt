@@ -26,3 +26,4 @@ endif()
 
 add_subdirectory(library)
 add_subdirectory(cli)
+add_subdirectory(payloads)

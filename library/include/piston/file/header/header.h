@@ -9,6 +9,10 @@ namespace piston
     {
     public:
 
+        // Pointer to data in the header
+        typedef uint8_t*        ptr_type;
+        typedef const uint8_t*  const_ptr_type;
+
         /**
          * @brief Check whether this header's data is valid.
          * 
@@ -16,6 +20,21 @@ namespace piston
          * @return false Otherwise
          */
         virtual bool is_valid() const;
+
+        /**
+         * @brief Get the size, in bytes, of this header
+         * 
+         * @return size_t Header size in bytes
+         */
+        virtual size_t size() const = 0;
+
+        /**
+         * @brief Get a pointer to the start of this header's data
+         * 
+         * @return ptr_type Pointer to header data
+         */
+        virtual ptr_type data() = 0;
+        virtual const_ptr_type data() const = 0;
     };
 }
 

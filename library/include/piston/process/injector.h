@@ -17,6 +17,7 @@ namespace piston
 
         typedef std::filesystem::path library_path;
         typedef std::filesystem::path executable_path;
+        typedef std::vector<std::string> argument_list;
 
         enum class mode
         {
@@ -62,10 +63,11 @@ namespace piston
          * 
          * @param library_path Path to the library to be injected into the target executable
          * @param executable_path Path to the executable into which the target library should be injected
+         * @param arguments Command-line arguments passed to the executable
          * @return true If injection succeeds
          * @return false If injection fails
          */
-        static injector inject(const library_path& library_path, const executable_path& executable_path);
+        static injector inject(const library_path& library_path, const executable_path& executable_path, const argument_list& args = {});
 
         /**
          * @brief Get the injection mode for this injection
