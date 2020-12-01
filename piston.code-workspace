@@ -8,8 +8,8 @@
 		"editor.tabSize": 4,
 		"editor.insertSpaces": true,
 		"files.associations": {
-			"*.eex": "html-eex",
 			"*.leex": "html-eex",
+			"*.eex": "html-eex",
 			"atomic": "cpp",
 			"cctype": "cpp",
 			"cmath": "cpp",
@@ -105,7 +105,8 @@
 			"stack": "cpp",
 			"string_view": "cpp",
 			"unordered_set": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"future": "cpp"
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace piston
   typedef std::stringstream stringstream;
   typedef std::wstringstream wstringstream;
   typedef std::filesystem::path path;
+  typedef uint8_t byte;
 }
 
 #endif // PISTON_CORE_TYPES_H
