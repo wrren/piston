@@ -1,0 +1,9 @@
+#ifndef PISTON_CODE_INSTRUCTIONS_X86_H
+#define PISTON_CODE_INSTRUCTIONS_X86_H
+
+namespace piston::x86
+{
+
+}
+
+#endif // PISTON_CODE_INSTRUCTIONS_X86_H
