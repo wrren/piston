@@ -29,7 +29,7 @@ namespace piston
             return false;
         }
 
-        std::fstream stream(m_path);
+        std::fstream stream(m_path, std::fstream::in);
         if(!stream.is_open())
         {
             return false;

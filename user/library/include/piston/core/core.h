@@ -1,6 +1,7 @@
 #ifndef PISTON_CORE_H
 #define PISTON_CORE_H
 
+#include <piston/core/flag.h>
 #include <piston/core/types.h>
 #include <piston/core/format.h>
 #include <piston/core/strings.h>

@@ -1,6 +1,7 @@
 #ifndef PISTON_FILE_HEADER_H
 #define PISTON_FILE_HEADER_H
 
+#include <piston/core/core.h>
 #include <piston/core/serializable.h>
 #include <piston/core/buffer.h>
 
@@ -36,6 +37,24 @@ namespace piston
          */
         virtual ptr_type data() = 0;
         virtual const_ptr_type data() const = 0;
+
+        /**
+         * @brief Deserialize a header from the given stream
+         * 
+         * @param stream Stream from which to deserialize the header data
+         * @return true If the data deserialized correctly
+         * @return false Otherwise
+         */
+        virtual bool deserialize(std::istream& stream) override;
+
+        /**
+         * @brief Serialize a header into the given stream
+         * 
+         * @param stream Stream into which to serialize the header data
+         * @return true If the data serialized correctly
+         * @return false Otherwise
+         */
+        virtual bool serialize(std::ostream& stream) override;
     };
 }
 

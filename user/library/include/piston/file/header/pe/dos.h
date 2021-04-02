@@ -3,8 +3,9 @@
 
 #include <piston/core/core.h>
 #include <piston/file/header.h>
+#include <piston/core/buffer.h>
 
-#define DOS_HEADER_SIZE 64
+#define PISTON_PE_DOS_HEADER_SIZE 64
 
 namespace piston
 {
@@ -67,10 +68,16 @@ namespace piston
         virtual ptr_type data() override;
         virtual const_ptr_type data() const override;
 
+        /**
+         * @brief Destroy the dos header object
+         * 
+         */
+        ~dos_header();
+
     private:
 
         // Header Data
-        uint8_t m_data[DOS_HEADER_SIZE];
+        byte* m_data;
     };
 }
 

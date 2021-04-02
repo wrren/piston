@@ -3,6 +3,8 @@
 
 #include <piston/file/file.h>
 #include <piston/file/header/pe/dos.h>
+#include <piston/file/header/pe/image_file.h>
+#include <piston/file/header/pe/optional.h>
 
 namespace piston
 {
@@ -39,6 +41,20 @@ namespace piston
         const dos_header& get_dos_header() const;
 
         /**
+         * @brief Get the PE image file header object
+         * 
+         * @return const image_file_header& 
+         */
+        const image_file_header& get_image_file_header() const;
+
+        /**
+         * @brief Get the image optional header object
+         * 
+         * @return const image_optional_header& 
+         */
+        const image_optional_header& get_image_optional_header() const;
+
+        /**
          * @brief Deserialize PE Format data from the given stream
          * 
          * @param stream Input Stream
@@ -51,6 +67,10 @@ namespace piston
 
         // File DOS Header
         dos_header m_dos_header;
+        // Image file header
+        image_file_header m_image_file_header;
+        // Image optional header (Image files only)
+        image_optional_header m_image_optional_header;
     };
 }
 

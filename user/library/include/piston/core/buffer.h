@@ -1,6 +1,8 @@
 #ifndef PISTON_CORE_BUFFER_H
 #define PISTON_CORE_BUFFER_H
 
+#include <piston/core/types.h>
+
 namespace piston
 {
     template<typename T>
@@ -8,7 +10,7 @@ namespace piston
     {
     public:
 
-        typedef uint8_t* buffer_ptr;
+        typedef byte* buffer_ptr;
 
         /**
          * @brief Construct a new buffer ref object
@@ -16,7 +18,7 @@ namespace piston
          * @param ptr Pointer to the buffer containing the buffer_ref's data
          * @param offset Offset into the buffer where the data begins
          */
-        buffer_ref(buffer_ptr ptr, size_t offset) :
+        buffer_ref(buffer_ptr* ptr, size_t offset) :
         m_ptr(ptr),
         m_offset(offset)
         {}
@@ -29,7 +31,7 @@ namespace piston
          */
         buffer_ref<T>& operator=(const T& val)
         {
-            *(reinterpret_cast<T*>(m_ptr + m_offset)) = val;
+            *(reinterpret_cast<T*>(*m_ptr + m_offset)) = val;
             return *this;
         }
 
@@ -40,13 +42,23 @@ namespace piston
          */
         operator T() const
         {
-            return *(reinterpret_cast<const T*>(m_ptr + m_offset));
+            return *(reinterpret_cast<const T*>(*m_ptr + m_offset));
+        }
+
+        /**
+         * @brief Get the value that this reference is pointing to
+         * 
+         * @return T 
+         */
+        T get() const
+        {
+            return *(reinterpret_cast<const T*>(*m_ptr + m_offset));
         }
 
     private:
 
         // Pointer to the buffer read and written to by this buffer_ref
-        buffer_ptr m_ptr;
+        buffer_ptr* m_ptr;
         // Offset into the buffer where this buffer_ref's data begins
         size_t m_offset;
     };

@@ -85,8 +85,10 @@ namespace piston::cli
                 return;
             }
 
-
             output_stream << "PE file valid! PE Offset: " << std::hex << file.get_dos_header().e_ifanew << std::endl;
+            output_stream << "Number of sections: " << file.get_image_file_header().number_of_sections << std::endl;
+            output_stream << "Timestamp: " << file.get_image_file_header().timestamp << std::endl;
+            output_stream << "Size of code: " << file.get_image_optional_header().size_of_code.get() << std::endl;
         }
         catch(const std::exception& e)
         {
