@@ -26,7 +26,7 @@ namespace piston
          * @return true If this object was serialized correctly
          * @return false Otherwise
          */
-        virtual bool serialize(std::ostream& stream);
+        virtual bool serialize(std::ostream& stream) const;
     };
 }
 

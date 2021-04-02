@@ -106,7 +106,12 @@
 			"string_view": "cpp",
 			"unordered_set": "cpp",
 			"variant": "cpp",
-			"future": "cpp"
+			"future": "cpp",
+			"clocale": "cpp",
+			"xmemory0": "cpp",
+			"_70_exception": "cpp",
+			"_70_new": "cpp",
+			"_70_xstddef": "cpp"
 		}
 	}
 }

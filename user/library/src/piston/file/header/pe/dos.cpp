@@ -1,4 +1,4 @@
-#include <piston/file/header/dos.h>
+#include <piston/file/header/pe/dos.h>
 #include <cstdlib>
 
 namespace piston
@@ -17,7 +17,7 @@ namespace piston
         return stream.read(reinterpret_cast<char*>(m_data), DOS_HEADER_SIZE).good();
     }
 
-    bool dos_header::serialize(std::ostream& stream)
+    bool dos_header::serialize(std::ostream& stream) const
     {
         return stream.write(reinterpret_cast<const char*>(m_data), DOS_HEADER_SIZE).good();
     }

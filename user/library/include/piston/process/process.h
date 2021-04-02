@@ -2,6 +2,7 @@
 #define PISTON_PROCESS_H
 
 #include <piston/core/core.h>
+#include <piston/process/memory/region.h>
 #include <memory>
 #include <vector>
 #include <optional>
@@ -17,6 +18,7 @@ namespace piston
         typedef piston::platform::process_name name_type;
         typedef std::shared_ptr<process> ptr_type;
         typedef std::vector<ptr_type> list_type;
+        typedef std::pair<uintptr_t, uintptr_t> memory_range_type;
 
         /**
          * @brief Exception type thrown when a failure occurs during process listing.
@@ -56,6 +58,13 @@ namespace piston
          * @return base_address Process base address
          */
         std::optional<base_address> get_base_address() const;
+
+        /**
+         * @brief List regions of memory currently in use by this process.
+         * 
+         * @return Process memory range
+         */
+        std::vector<memory_region> list_memory_regions() const;
 
         /**
          * @brief Read data from this process' memory

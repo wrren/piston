@@ -2,7 +2,7 @@
 #define PISTON_FILE_PE_H
 
 #include <piston/file/file.h>
-#include <piston/file/header/dos.h>
+#include <piston/file/header/pe/dos.h>
 
 namespace piston
 {

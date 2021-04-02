@@ -107,6 +107,31 @@ namespace piston
 		return result;
 	}
 
+	std::vector<memory_region> process::list_memory_regions() const
+	{
+		std::vector<memory_region> result;
+		
+		HANDLE process_handle;
+		MEMORY_BASIC_INFORMATION memory_info;
+
+		if(!get_process_handle(m_id, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
+		{
+			return result;
+		}
+
+		LPCVOID start_address = 0;
+
+		while(VirtualQueryEx(process_handle, start_address, &memory_info, sizeof(memory_info)))
+		{
+			if(memory_info.State == MEM_COMMIT && memory_info.Protect != PAGE_NOACCESS)
+			{
+				memory_region region(reinterpret_cast<memory_region::address_type>(memory_info.BaseAddress), memory_info.RegionSize);
+			}
+		}
+
+		return result;
+	}
+
 	process::ptr_type process::find_by_name(const process::name_type& name)
 	{
 		auto w_name = convert::to_wstring(name);

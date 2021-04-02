@@ -12,6 +12,8 @@ file(GLOB_RECURSE
     include/piston/code/*.h
     src/piston/file/*.cpp 
     include/piston/file/*.h
+    src/piston/ipc/*.cpp 
+    include/piston/ipc/*.h
     src/piston/process/*.cpp 
     include/piston/process/*.h
 )

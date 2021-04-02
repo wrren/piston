@@ -1,16 +1,16 @@
-#ifndef PISTON_FILE_HEADER_PE_H
-#define PISTON_FILE_HEADER_PE_H
+#ifndef PISTON_FILE_HEADER_PE_OPTIONAL_H
+#define PISTON_FILE_HEADER_PE_OPTIONAL_H
 
 #include <piston/file/header.h>
 
 namespace piston
 {
-    class pe_header : public header
+    class optional_header : public header
     {
     public:
 
         /**
-         * @brief Deserialize a PE header from the given stream
+         * @brief Deserialize an image optional header from the given stream
          * 
          * @param stream Stream from which to deserialize the header data
          * @return true If the data deserialized correctly
@@ -20,4 +20,4 @@ namespace piston
     };
 }
 
-#endif // PISTON_FILE_HEADER_PE_H
+#endif // PISTON_FILE_HEADER_PE_OPTIONAL_H

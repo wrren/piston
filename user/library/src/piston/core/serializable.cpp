@@ -7,7 +7,7 @@ namespace piston
         return stream.good();
     }
 
-    bool serializable::serialize(std::ostream& stream)
+    bool serializable::serialize(std::ostream& stream) const
     {
         return stream.good();
     }

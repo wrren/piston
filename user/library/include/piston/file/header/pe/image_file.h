@@ -1,16 +1,19 @@
-#ifndef PISTON_FILE_HEADER_PE_H
-#define PISTON_FILE_HEADER_PE_H
+#ifndef PISTON_FILE_HEADER_PE_IMAGE_FILE_H
+#define PISTON_FILE_HEADER_PE_IMAGE_FILE_H
 
 #include <piston/file/header.h>
 
 namespace piston
 {
-    class pe_header : public header
+    class image_file_header : public header
     {
     public:
 
+        // Header size in bytes
+        static const size_t header_size;
+
         /**
-         * @brief Deserialize a PE header from the given stream
+         * @brief Deserialize an image file header from the given stream
          * 
          * @param stream Stream from which to deserialize the header data
          * @return true If the data deserialized correctly
@@ -20,4 +23,4 @@ namespace piston
     };
 }
 
-#endif // PISTON_FILE_HEADER_PE_H
+#endif // PISTON_FILE_HEADER_PE_IMAGE_FILE_H

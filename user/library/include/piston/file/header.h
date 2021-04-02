@@ -2,6 +2,7 @@
 #define PISTON_FILE_HEADER_H
 
 #include <piston/core/serializable.h>
+#include <piston/core/buffer.h>
 
 namespace piston
 {

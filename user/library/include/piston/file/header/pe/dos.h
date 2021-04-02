@@ -2,8 +2,7 @@
 #define PISTON_FILE_DOS_HEADER_H
 
 #include <piston/core/core.h>
-#include <piston/file/header/header.h>
-#include <piston/core/buffer.h>
+#include <piston/file/header.h>
 
 #define DOS_HEADER_SIZE 64
 
@@ -43,7 +42,7 @@ namespace piston
          * @return true If the data serialized correctly
          * @return false Otherwise
          */
-        virtual bool serialize(std::ostream& stream) override;
+        virtual bool serialize(std::ostream& stream) const override;
 
         /**
          * @brief Determine whether the contained DOS header data is valid

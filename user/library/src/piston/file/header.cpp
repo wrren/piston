@@ -1,4 +1,4 @@
-#include <piston/file/header/header.h>
+#include <piston/file/header.h>
 
 namespace piston
 {

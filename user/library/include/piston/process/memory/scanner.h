@@ -11,29 +11,31 @@ namespace piston
     public:
 
         // Scan result type
-        typedef std::vector<memory_region> result_type;
+        typedef std::vector<uintptr_t> result_type;
         // Pointer to a scanner
         typedef std::shared_ptr<memory_scanner> ptr_type;
 
         /**
          * @brief Scan the given memory region for matches
          * 
-         * @param region Region to be scanned
+         * @param data Start of data buffer
+         * @param data_size Size of buffer in bytes
          * @return result_type Matches
          */
-        virtual result_type scan(const memory_region& region) const = 0;
+        virtual result_type scan(const byte* data, size_t data_size) const = 0;
 
     protected:
 
         /**
          * @brief Scan for the contents of the given memory buffer in the given region
          * 
-         * @param region Memory region to be scanned
+         * @param data Start of input data
+         * @param data_size Size of input data in bytes
          * @param buffer Buffer containing data to be scanned for
          * @param buffer_size Size of the buffer
          * @return result_type Matches
          */
-        result_type scan_for_buffer(const memory_region& region, const void* buffer, size_t buffer_size) const;
+        result_type scan_for_buffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const;
     };
 
     template<typename T, typename std::enable_if<std::is_pod<T>::value, T>::type = true>
@@ -56,9 +58,9 @@ namespace piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual result_type scan(const memory_region& region) const override
+        virtual result_type scan(const byte* data, size_t data_size) const override
         {
-            return scan_for_buffer(region, reinterpret_cast<const void*>(&m_value), sizeof(T));
+            return scan_for_buffer(data, data_size, reinterpret_cast<const void*>(&m_value), sizeof(T));
         }
 
     private:
@@ -97,15 +99,15 @@ namespace piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual result_type scan(const memory_region& region) const override
+        virtual result_type scan(const byte* data, size_t data_size) const override
         {
             memory_scanner::result_type results;
 
-            for(auto it = region.begin(); it != region.end(); ++it)
+            for(auto i = 0; i < data_size; i++)
             {
-                if((it + sizeof(T)) <= region.end())
+                if((i + sizeof(T)) <= data_size)
                 {
-                    auto value = *(reinterpret_cast<const T*>(it.get_data()));
+                    T value = *(reinterpret_cast<const T*>(data + i));
 
                     if( (m_mode == compare_mode::COMPARE_EQUALS                 && value == m_value)    ||
                         (m_mode == compare_mode::COMPARE_GREATER_THAN           && value > m_value)     ||
@@ -113,7 +115,7 @@ namespace piston
                         (m_mode == compare_mode::COMPARE_GREATER_THAN_OR_EQUAL  && value >= m_value)    ||
                         (m_mode == compare_mode::COMPARE_LESS_THAN_OR_EQUAL     && value <= m_value))
                     {
-                        results.push_back(memory_region(it, it + sizeof(T)));
+                        results.push_back(i);
                     }
                 }
             }
