@@ -7,24 +7,23 @@
 #include <vector>
 #include <optional>
 
-namespace piston
+namespace Piston
 {
-    class process
+    class Process
     {
     public:
 
-        typedef uintptr_t base_address;
-        typedef piston::platform::process_id id_type;
-        typedef piston::platform::process_name name_type;
-        typedef std::shared_ptr<process> ptr_type;
-        typedef std::vector<ptr_type> list_type;
-        typedef std::pair<uintptr_t, uintptr_t> memory_range_type;
+        typedef uintptr_t AddressType;
+        typedef Piston::Platform::ProcessID IDType;
+        typedef Piston::Platform::ProcessName NameType;
+        typedef std::shared_ptr<Process> PointerType;
+        typedef std::vector<PointerType> ListType;
 
         /**
          * @brief Exception type thrown when a failure occurs during process listing.
          * 
          */
-        class list_exception : public std::exception
+        class ListException : public std::exception
         {
         public:
 
@@ -35,7 +34,7 @@ namespace piston
          * @brief Construct a new process object
          * 
          */
-        process();
+        Process();
 
 		/**
 		 * @brief Construct a new process object
@@ -43,28 +42,28 @@ namespace piston
 		 * @param id process ID
 		 * @param name process name
 		 */
-		process(id_type id, const name_type& name);
+		Process(IDType id, const NameType& name);
 
 		/**
 		 * @brief Get the ID of this process.
 		 * 
 		 * @return Process ID
 		 */
-		id_type get_id() const;
+		IDType GetID() const;
 
         /**
          * @brief Get the base address of this process
          * 
          * @return base_address Process base address
          */
-        std::optional<base_address> get_base_address() const;
+        std::optional<AddressType> GetBaseAddress() const;
 
         /**
          * @brief List regions of memory currently in use by this process.
          * 
          * @return Process memory range
          */
-        std::vector<memory_region> list_memory_regions() const;
+        std::vector<MemoryRegion> ListMemoryRegions() const;
 
         /**
          * @brief Read data from this process' memory
@@ -76,7 +75,18 @@ namespace piston
          * @return true If the process memory was read successfully
          * @return false Otherwise
          */
-        bool read_memory(base_address address, void* buffer, size_t bytes, size_t& bytes_read);
+        bool ReadMemory(AddressType address, void* buffer, size_t bytes, size_t& bytes_read);
+
+        /**
+         * @brief Read data from this process' memory
+         * 
+         * @param region Region to be read
+         * @param buffer Buffer into which the data should be written
+         * @param bytes_read Number of bytes that were read
+         * @return true If the process memory was read successfully
+         * @return false Otherwise
+         */
+        bool ReadMemory(const MemoryRegion& region, void* buffer, size_t& bytes_read);
 
         /**
          * @brief Write data to this process' memory
@@ -88,14 +98,14 @@ namespace piston
          * @return true If the process memory was written successfully
          * @return false Otherwise
          */
-        bool write_memory(base_address address, void* buffer, size_t bytes, size_t& bytes_written);
+        bool WriteMemory(AddressType address, void* buffer, size_t bytes, size_t& bytes_written);
 
         /**
          * @brief Get the current process.
          * 
          * @return ptr_type Pointer to the current process.
          */
-        static ptr_type current_process();
+        static PointerType CurrentProcess();
 
         /**
          * @brief Find the process with the specified name.
@@ -103,21 +113,21 @@ namespace piston
          * @param name Name to search for
          * @return ptr_type Pointer to the located process
          */
-        static ptr_type find_by_name(const name_type& name);
+        static PointerType FindByName(const NameType& name);
 
 		/**
 		 * @brief Get the name of this process.
 		 * 
 		 * @return Process Name
 		 */
-		const name_type& get_name() const;
+		const NameType& GetName() const;
 
         /**
          * @brief List running processes
          * 
          * @return list_type List of running processes.
          */
-        static list_type list();
+        static ListType List();
 
         /**
          * @brief Comparison operator. Compares with a process ID.
@@ -126,14 +136,14 @@ namespace piston
          * @return true If this process object's ID matches the one provided
          * @return false Otherwise
          */
-        bool operator==(id_type process_id) const;
+        bool operator==(IDType process_id) const;
 
     private:
 
         // Process ID
-        id_type m_id;
+        IDType mID;
         // Process Name
-        name_type m_name;
+        NameType mName;
     };
 }
 

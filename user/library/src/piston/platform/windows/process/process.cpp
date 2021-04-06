@@ -8,7 +8,7 @@
 #define PISTON_MAX_PROCESSES 4096
 #define PISTON_MAX_PROCESS_NAME_LENGTH	MAX_PATH
 
-namespace piston
+namespace Piston
 {
 	bool get_module_name(HANDLE process, std::wstring& module_name)
 	{
@@ -24,14 +24,14 @@ namespace piston
 		return true;
 	}
 
-	bool get_process_handle(process::id_type id, DWORD desired_access, HANDLE* handle)
+	bool get_process_handle(Process::IDType id, DWORD desired_access, HANDLE* handle)
 	{
-		platform::process_id process_ids[PISTON_MAX_PROCESSES];
+		Platform::ProcessID process_ids[PISTON_MAX_PROCESSES];
         DWORD bytes_needed, num_processes;
 
 		if (!EnumProcesses(process_ids, sizeof(process_ids), &bytes_needed))
 		{
-			throw process::list_exception();
+			throw Process::ListException();
 		}
 
 		num_processes = bytes_needed / sizeof(DWORD);
@@ -53,28 +53,28 @@ namespace piston
 		return false;
 	}
 
-	process::ptr_type process::current_process()
+	Process::PointerType Process::CurrentProcess()
 	{
-		auto list = process::list();
+		auto list = Process::List();
 		auto current_process_id = GetCurrentProcessId();
 
 		for(auto process : list)
 		{
-			if(process->get_id() == current_process_id)
+			if(process->GetID() == current_process_id)
 			{
 				return process;
 			}
 		}
-		return process::ptr_type();
+		return Process::PointerType();
 	}
 
-	std::optional<process::base_address> process::get_base_address() const
+	std::optional<Process::AddressType> Process::GetBaseAddress() const
 	{
-		std::optional<process::base_address> result;
+		std::optional<Process::AddressType> result;
 		std::wstring module_name;
 		HANDLE process_handle;
 
-		if(!get_process_handle(m_id, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
+		if(!get_process_handle(mID, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
 		{
 			return result;
 		}
@@ -84,7 +84,7 @@ namespace piston
 			return result;
 		}
 
-		HANDLE module_snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, m_id);
+		HANDLE module_snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, mID);
 
 		if(module_snapshot != INVALID_HANDLE_VALUE)
 		{
@@ -97,7 +97,7 @@ namespace piston
 				{
 					if(module_name == module_entry.szExePath)
 					{
-						result = reinterpret_cast<process::base_address>(module_entry.modBaseAddr);
+						result = reinterpret_cast<Process::AddressType>(module_entry.modBaseAddr);
 					}
 				} while(Module32Next(module_snapshot, &module_entry));
 			}
@@ -107,14 +107,14 @@ namespace piston
 		return result;
 	}
 
-	std::vector<memory_region> process::list_memory_regions() const
+	std::vector<MemoryRegion> Process::ListMemoryRegions() const
 	{
-		std::vector<memory_region> result;
+		std::vector<MemoryRegion> result;
 		
 		HANDLE process_handle;
 		MEMORY_BASIC_INFORMATION memory_info;
 
-		if(!get_process_handle(m_id, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
+		if(!get_process_handle(mID, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
 		{
 			return result;
 		}
@@ -125,16 +125,16 @@ namespace piston
 		{
 			if(memory_info.State == MEM_COMMIT && memory_info.Protect != PAGE_NOACCESS)
 			{
-				memory_region region(reinterpret_cast<memory_region::address_type>(memory_info.BaseAddress), memory_info.RegionSize);
+				result.push_back(MemoryRegion(reinterpret_cast<MemoryRegion::AddressType>(memory_info.BaseAddress), memory_info.RegionSize));
 			}
 		}
 
 		return result;
 	}
 
-	process::ptr_type process::find_by_name(const process::name_type& name)
+	Process::PointerType Process::FindByName(const Process::NameType& name)
 	{
-		auto w_name = convert::to_wstring(name);
+		auto w_name = Convert::ToWideString(name);
 		
 		PROCESSENTRY32 process_snapshot;
 		HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -147,25 +147,25 @@ namespace piston
 				DWORD pid = process_snapshot.th32ProcessID;
 				CloseHandle(handle);
 
-				return process::ptr_type(new process(pid, name));
+				return Process::PointerType(new Process(pid, name));
 			}
 		} while (Process32Next(handle, &process_snapshot));
 
 		CloseHandle(handle);
 
-		return process::ptr_type();
+		return Process::PointerType();
 	}
 
-    process::list_type process::list()
+    Process::ListType Process::List()
     {
-		process::list_type results;
-		platform::process_id process_ids[PISTON_MAX_PROCESSES];
+		Process::ListType results;
+		Platform::ProcessID process_ids[PISTON_MAX_PROCESSES];
         DWORD bytes_needed, num_processes;
 		TCHAR process_name[PISTON_MAX_PROCESS_NAME_LENGTH];
 
 		if (!EnumProcesses(process_ids, sizeof(process_ids), &bytes_needed))
 		{
-			throw process::list_exception();
+			throw Process::ListException();
 		}
 
 		num_processes = bytes_needed / sizeof(DWORD);
@@ -183,7 +183,7 @@ namespace piston
 					{
 						if (GetModuleBaseName(process_handle, module_handle, process_name, sizeof(process_name) / sizeof(TCHAR)))
 						{
-							results.push_back(process::ptr_type(new process(process_ids[i], (process::name_type::value_type*) process_name)));
+							results.push_back(Process::PointerType(new Process(process_ids[i], (Process::NameType::value_type*) process_name)));
 						}
 					}
 				}
@@ -195,10 +195,10 @@ namespace piston
 		return results;
     }
 
-	bool process::read_memory(process::base_address address, void* buffer, size_t bytes, size_t& bytes_read)
+	bool Process::ReadMemory(Process::AddressType address, void* buffer, size_t bytes, size_t& bytes_read)
 	{
 		HANDLE process_handle;
-		if(!get_process_handle(m_id, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
+		if(!get_process_handle(mID, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, &process_handle))
 		{
 			return false;
 		}
@@ -209,10 +209,10 @@ namespace piston
 		return result;
 	}
 
-	bool process::write_memory(process::base_address address, void* buffer, size_t bytes, size_t& bytes_written)
+	bool Process::WriteMemory(Process::AddressType address, void* buffer, size_t bytes, size_t& bytes_written)
 	{
 		HANDLE process_handle;
-		if(!get_process_handle(m_id, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, &process_handle))
+		if(!get_process_handle(mID, PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, &process_handle))
 		{
 			return false;
 		}

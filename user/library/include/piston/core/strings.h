@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace piston
+namespace Piston
 {
     /**
      * @brief Provides utility functions for manipulating strings.
@@ -40,7 +40,7 @@ namespace piston
             return stream.str();
         }
     };
-} // namespace piston
+} // namespace Piston
 
 
 #endif // PISTON_CORE_STRING_H

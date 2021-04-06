@@ -1,9 +1,9 @@
 #ifndef PISTON_CODE_DISASSEMBLY_H
 #define PISTON_CODE_DISASSEMBLY_H
 
-namespace piston
+namespace Piston
 {
-    class disassembly
+    class Disassembly
     {
     public:
 

@@ -20,20 +20,20 @@ int main(int argc, char** argv)
 {
 	if(argc >= 2 && !strcmp(argv[1], "list"))
 	{
-		piston::cli::list(std::cout, std::cerr);
+		Piston::cli::list(std::cout, std::cerr);
 	}
 	else if(argc >= 3 && !strcmp(argv[1], "open"))
 	{
-		piston::cli::read_file(std::cout, std::cerr, argv[2]);
+		Piston::cli::read_file(std::cout, std::cerr, argv[2]);
 	}
 	else if(argc >= 3 && !strcmp(argv[1], "load"))
 	{
-		piston::cli::load(std::cout, std::cerr, argv[2]);
+		Piston::cli::load(std::cout, std::cerr, argv[2]);
 	}
 	else if(argc >= 5 && !strcmp(argv[1], "inject") && !strcmp(argv[3], "--into"))
 	{
-		piston::injector::library_path library_path = argv[2];
-		piston::injector::executable_path executable_path = argv[4];
+		Piston::Injector::LibraryPath library_path = argv[2];
+		Piston::Injector::ExecutablePath executable_path = argv[4];
 		
 		if(!std::filesystem::exists(library_path))
 		{
@@ -45,12 +45,12 @@ int main(int argc, char** argv)
 		{
 			try
 			{
-				piston::process::id_type process_id;
+				Piston::Process::IDType process_id;
 
-				auto process = piston::process::find_by_name(argv[4]);
+				auto process = Piston::Process::FindByName(argv[4]);
 				if(process)
 				{
-					process_id = process->get_id();
+					process_id = process->GetID();
 				}
 				else
 				{
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 					std::cout << index << ", " << argv[4] << std::endl;
 				}
 				
-				piston::cli::inject_into_process(std::cout, std::cerr, library_path, process_id);
+				Piston::cli::inject_into_process(std::cout, std::cerr, library_path, process_id);
 			}
 			catch(const std::invalid_argument&)
 			{
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			piston::injector::argument_list arguments;
+			Piston::Injector::ArgumentList arguments;
 
 			for(int i = 5; i < argc; i++)
 			{
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
 
 			try
 			{
-				piston::cli::inject_into_executable(std::cout, std::cerr, library_path, executable_path, arguments);
+				Piston::cli::inject_into_executable(std::cout, std::cerr, library_path, executable_path, arguments);
 			}
 			catch(const std::invalid_argument&)
 			{

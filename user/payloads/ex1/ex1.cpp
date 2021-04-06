@@ -31,26 +31,26 @@ LONG VectoredExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
         ++(context->Rip);
     }
 
-    auto current_process = piston::process::current_process();
+    auto current_process = Piston::Process::CurrentProcess();
     if(!current_process)
     {
         DebugPrint("Failed to get current process.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
     }
 
-    auto base_address = current_process->get_base_address();
+    auto base_address = current_process->GetBaseAddress();
     if(!base_address)
     {
         DebugPrint("Failed to get process base address.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
     }
 
-    DebugPrint(piston::format("Terminating Thread at ", std::hex, base_address.value() + THREAD_HANDLE_OFFSET, "\n").c_str());
+    DebugPrint(Piston::Format("Terminating Thread at ", std::hex, base_address.value() + THREAD_HANDLE_OFFSET, "\n").c_str());
 
-    piston::process::base_address thread_address;
+    Piston::Process::AddressType thread_address;
     size_t bytes_read;
 
-    if(!current_process->read_memory(base_address.value() + THREAD_HANDLE_OFFSET, &thread_address, sizeof(thread_address), bytes_read))
+    if(!current_process->ReadMemory(base_address.value() + THREAD_HANDLE_OFFSET, &thread_address, sizeof(thread_address), bytes_read))
     {
         DebugPrint("Failed to read process memory.\n");
         return EXCEPTION_CONTINUE_EXECUTION;

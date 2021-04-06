@@ -5,9 +5,9 @@
 #include <mutex>
 #include <piston/core/core.h>
 
-namespace piston
+namespace Piston
 {
-    class breakpoint
+    class Breakpoint
     {
     public:
 
@@ -15,7 +15,7 @@ namespace piston
          * @brief Exception type thrown when a breakpoint or register cannot be checked.
          * 
          */
-        class check_exception : public std::exception
+        class CheckException : public std::exception
         {
         public:
 
@@ -24,7 +24,7 @@ namespace piston
              * 
              * @param message Error message
              */
-            check_exception(const char* message);
+            CheckException(const char* message);
 
             /**
              * @brief Return the human-readable message associated with this exception.
@@ -36,14 +36,14 @@ namespace piston
         private:
 
             // Error Message
-            string m_message;
+            String mMessage;
         };
 
         /**
          * @brief Exception type thrown when a breakpoint or register cannot be set.
          * 
          */
-        class set_exception : public std::exception
+        class SetException : public std::exception
         {
         public:
 
@@ -52,7 +52,7 @@ namespace piston
              * 
              * @param message Error message
              */
-            set_exception(const char* message);
+            SetException(const char* message);
 
             /**
              * @brief Return the human-readable message associated with this exception.
@@ -64,19 +64,19 @@ namespace piston
         private:
 
             // Error Message
-            string m_message;
+            String mMessage;
         };
 
         // Address of a breakpoint handler
-        typedef void* handler_address;
+        typedef void* HandlerAddress;
         // Address of the code or memory to break on
-        typedef void* breakpoint_address;
+        typedef void* BreakpointAddress;
         // Breakpoint list type
-        typedef std::vector<breakpoint> list;
+        typedef std::vector<Breakpoint> ListType;
         // Breakpoint size
-        typedef uint8_t size_type;
+        typedef uint8_t SizeType;
 
-        enum class register_number : uint8_t
+        enum class Register : uint8_t
         {
             REGISTER_ANY,
             REGISTER_DR_0 = 0,
@@ -85,13 +85,13 @@ namespace piston
             REGISTER_DR_3 = 6
         };
 
-        enum class scope
+        enum class Scope
         {
             BP_SCOPE_THREAD = 0,
             BP_SCOPE_GLOBAL = 1
         };
 
-        enum class break_type
+        enum class BreakType
         {
             BP_TYPE_CODE,
             BP_TYPE_WRITE,
@@ -105,7 +105,7 @@ namespace piston
          * @return true If the given register has a breakpoint set
          * @return false Otherwise
          */
-        static bool is_set(register_number reg);
+        static bool IsSet(Register reg);
 
         /**
          * @brief Enable the hardware breakpoint set on the given register
@@ -113,7 +113,7 @@ namespace piston
          * @param reg Register Number
          * @param scope Breakpoint scope
          */
-        static void set(register_number reg, scope scope);
+        static void Set(Register reg, Scope scope);
 
         /**
          * @brief Disable the hardware breakpoint set on the given register
@@ -121,7 +121,7 @@ namespace piston
          * @param reg Register Number
          * @param scope Breakpoint scope
          */
-        static void unset(register_number reg, scope scope);
+        static void Unset(Register reg, Scope scope);
 
         /**
          * @brief Set a new thread-local breakpoint
@@ -134,13 +134,13 @@ namespace piston
          * @param type Breakpoint type
          * @return breakpoint 
          */
-        static breakpoint set_thread(
-            platform::thread_id thread, 
-            handler_address handler, 
-            breakpoint_address breakpoint, 
-            size_type size, 
-            register_number register_number = register_number::REGISTER_ANY,
-            break_type type = break_type::BP_TYPE_CODE);
+        static Breakpoint SetThreadBreakpoint(
+            Platform::ThreadID thread, 
+            HandlerAddress handler, 
+            BreakpointAddress breakpoint, 
+            SizeType size, 
+            Register register_number = Register::REGISTER_ANY,
+            BreakType type = BreakType::BP_TYPE_CODE);
 
         /**
          * @brief Set a new global breakpoint
@@ -152,12 +152,12 @@ namespace piston
          * @param type Breakpoint type
          * @return breakpoint 
          */
-        static breakpoint set_global(
-            handler_address handler, 
-            breakpoint_address breakpoint, 
-            size_type size, 
-            register_number register_number = register_number::REGISTER_ANY,
-            break_type type = break_type::BP_TYPE_CODE);
+        static Breakpoint SetGlobalBreakpoint(
+            HandlerAddress handler, 
+            BreakpointAddress breakpoint, 
+            SizeType size, 
+            Register register_number = Register::REGISTER_ANY,
+            BreakType type = BreakType::BP_TYPE_CODE);
 
         /**
          * @brief Compare one breakpoint object to another
@@ -166,13 +166,13 @@ namespace piston
          * @return true If this is equivalent to the given breakpoint
          * @return false False otherwise
          */
-        bool operator==(const breakpoint& breakpoint) const;
+        bool operator==(const Breakpoint& breakpoint) const;
 
         /**
          * @brief Indicates that a breakpoint has been hit, removes it from the global breakpoint list.
          * 
          */
-        void hit();
+        void WasHit();
 
     private:
 
@@ -185,7 +185,7 @@ namespace piston
          * @param register_number Register used to set this breakpoint
          * @param type Breakpoint type
          */
-        breakpoint(handler_address handler, breakpoint_address breakpoint, size_type size, register_number register_number, break_type type);
+        Breakpoint(HandlerAddress handler, BreakpointAddress breakpoint, SizeType size, Register register_number, BreakType type);
 
         /**
          * @brief Construct a new thread-local breakpoint
@@ -197,26 +197,26 @@ namespace piston
          * @param type Breakpoint type
          * @param thread_id Thread on which the breakpoint is set
          */
-        breakpoint(handler_address handler, breakpoint_address breakpoint, size_type size, register_number register_number, break_type type, platform::thread_id thread_id);
+        Breakpoint(HandlerAddress handler, BreakpointAddress breakpoint, SizeType size, Register register_number, BreakType type, Platform::ThreadID thread_id);
 
         // Breakpoint Handler Address
-        handler_address m_handler;
+        HandlerAddress mHandler;
         // Address of the code or memory to break on
-        breakpoint_address m_address;
+        BreakpointAddress mAddress;
         // Breakpoint register used to set this breakpoint
-        register_number m_register; 
+        Register mRegister; 
         // Breakpoint type
-        break_type m_type;
+        BreakType mType;
         // Breakpoint size, in bytes
-        size_type m_size;
+        SizeType mSize;
         // Indicates the thread on which the breakpoint was set
-        platform::thread_id m_thread;
+        Platform::ThreadID mThread;
         // Breakpoint scope
-        scope m_scope;
+        Scope mScope;
         // Global breakpoint list
-        static list g_breakpoints;
+        static ListType gBreakpoints;
         // Breakpoint list mutex
-        static std::mutex g_mutex;
+        static std::mutex gMutex;
     };
 }
 

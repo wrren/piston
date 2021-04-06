@@ -4,9 +4,9 @@
 #include <istream>
 #include <ostream>
 
-namespace piston
+namespace Piston
 {
-    class serializable
+    class Serializable
     {
     public:
 
@@ -17,7 +17,7 @@ namespace piston
          * @return true If this object was deserialized correctly
          * @return false Otherwise
          */
-        virtual bool deserialize(std::istream& stream);
+        virtual bool Deserialize(std::istream& stream);
 
         /**
          * @brief Serialize data into the given stream
@@ -26,7 +26,7 @@ namespace piston
          * @return true If this object was serialized correctly
          * @return false Otherwise
          */
-        virtual bool serialize(std::ostream& stream) const;
+        virtual bool Serialize(std::ostream& stream) const;
     };
 }
 

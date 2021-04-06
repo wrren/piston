@@ -4,16 +4,16 @@
 #include <piston/process/memory/region.h>
 #include <iterator>
 
-namespace piston
+namespace Piston
 {
-    class memory_scanner
+    class MemoryScanner
     {
     public:
 
         // Scan result type
-        typedef std::vector<uintptr_t> result_type;
+        typedef std::vector<uintptr_t> ResultType;
         // Pointer to a scanner
-        typedef std::shared_ptr<memory_scanner> ptr_type;
+        typedef std::shared_ptr<MemoryScanner> PointerType;
 
         /**
          * @brief Scan the given memory region for matches
@@ -22,7 +22,7 @@ namespace piston
          * @param data_size Size of buffer in bytes
          * @return result_type Matches
          */
-        virtual result_type scan(const byte* data, size_t data_size) const = 0;
+        virtual ResultType Scan(const byte* data, size_t data_size) const = 0;
 
     protected:
 
@@ -35,11 +35,11 @@ namespace piston
          * @param buffer_size Size of the buffer
          * @return result_type Matches
          */
-        result_type scan_for_buffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const;
+        ResultType ScanForBuffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const;
     };
 
     template<typename T, typename std::enable_if<std::is_pod<T>::value, T>::type = true>
-    class memory_value_scanner : public memory_scanner
+    class MemoryValueScanner : public MemoryScanner
     {
     public:
 
@@ -48,8 +48,8 @@ namespace piston
          * 
          * @param value Value to scan for
          */
-        memory_value_scanner(const T& value) :
-        m_value(value)
+        MemoryValueScanner(const T& value) :
+        mValue(value)
         {}
 
         /**
@@ -58,23 +58,23 @@ namespace piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual result_type scan(const byte* data, size_t data_size) const override
+        virtual ResultType Scan(const byte* data, size_t data_size) const override
         {
-            return scan_for_buffer(data, data_size, reinterpret_cast<const void*>(&m_value), sizeof(T));
+            return ScanForBuffer(data, data_size, reinterpret_cast<const void*>(&mValue), sizeof(T));
         }
 
     private:
 
         // The value to scan for
-        T m_value;
+        T mValue;
     };
 
     template<typename T, typename std::enable_if<std::is_integral<T>::value, T>::type = true>
-    class memory_integral_scanner : public memory_scanner
+    class MemoryIntegralScanner : public MemoryScanner
     {
     public:
 
-        enum class compare_mode
+        enum class CompareMode
         {
             COMPARE_EQUALS,
             COMPARE_GREATER_THAN,
@@ -88,9 +88,9 @@ namespace piston
          * 
          * @param value Value to scan for
          */
-        memory_integral_scanner(const T& value, compare_mode mode = compare_mode::COMPARE_EQUALS) :
-        m_value(value),
-        m_mode(mode)
+        MemoryIntegralScanner(const T& value, CompareMode mode = CompareMode::COMPARE_EQUALS) :
+        mValue(value),
+        mMode(mode)
         {}
 
         /**
@@ -99,9 +99,9 @@ namespace piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual result_type scan(const byte* data, size_t data_size) const override
+        virtual ResultType Scan(const byte* data, size_t data_size) const override
         {
-            memory_scanner::result_type results;
+            MemoryScanner::ResultType results;
 
             for(auto i = 0; i < data_size; i++)
             {
@@ -109,11 +109,11 @@ namespace piston
                 {
                     T value = *(reinterpret_cast<const T*>(data + i));
 
-                    if( (m_mode == compare_mode::COMPARE_EQUALS                 && value == m_value)    ||
-                        (m_mode == compare_mode::COMPARE_GREATER_THAN           && value > m_value)     ||
-                        (m_mode == compare_mode::COMPARE_LESS_THAN              && value < m_value)     ||
-                        (m_mode == compare_mode::COMPARE_GREATER_THAN_OR_EQUAL  && value >= m_value)    ||
-                        (m_mode == compare_mode::COMPARE_LESS_THAN_OR_EQUAL     && value <= m_value))
+                    if( (mMode == CompareMode::COMPARE_EQUALS                 && value == mValue)    ||
+                        (mMode == CompareMode::COMPARE_GREATER_THAN           && value > mValue)     ||
+                        (mMode == CompareMode::COMPARE_LESS_THAN              && value < mValue)     ||
+                        (mMode == CompareMode::COMPARE_GREATER_THAN_OR_EQUAL  && value >= mValue)    ||
+                        (mMode == CompareMode::COMPARE_LESS_THAN_OR_EQUAL     && value <= mValue))
                     {
                         results.push_back(i);
                     }
@@ -126,9 +126,9 @@ namespace piston
     private:
 
         // The value to scan for
-        T m_value;
+        T mValue;
         // Comparison Mode
-        compare_mode m_mode;
+        CompareMode mMode;
     };
 }
 

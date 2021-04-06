@@ -2,55 +2,55 @@
 #include <piston/core/format.h>
 #include <fstream>
 
-namespace piston
+namespace Piston
 {
-    file::file()
+    File::File()
     {}
 
-    file::file(const path& path) :
-    m_path(path)
+    File::File(const Path& path) :
+    mPath(path)
     {}
 
-    const path& file::get_path() const
+    const Path& File::GetPath() const
     {
-        return m_path;
+        return mPath;
     }
 
-    file& file::operator=(const path& path)
+    File& File::operator=(const Path& path)
     {
-        m_path = path;
+        mPath = path;
         return *this;
     }
 
-    bool file::read()
+    bool File::Read()
     {
-        if(!std::filesystem::exists(m_path))
+        if(!std::filesystem::exists(mPath))
         {
             return false;
         }
 
-        std::fstream stream(m_path, std::fstream::in);
+        std::fstream stream(mPath, std::fstream::in);
         if(!stream.is_open())
         {
             return false;
         }
 
-        return deserialize(stream);
+        return Deserialize(stream);
     }
 
-    bool file::write()
+    bool File::Write()
     {
-        if(!std::filesystem::exists(m_path))
+        if(!std::filesystem::exists(mPath))
         {
             return false;
         }
 
-        std::fstream stream(m_path);
+        std::fstream stream(mPath);
         if(!stream.is_open())
         {
             return false;
         }
 
-        return serialize(stream);
+        return Serialize(stream);
     }
 }

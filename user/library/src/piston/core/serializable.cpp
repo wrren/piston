@@ -1,13 +1,13 @@
 #include <piston/core/serializable.h>
 
-namespace piston
+namespace Piston
 {
-    bool serializable::deserialize(std::istream& stream)
+    bool Serializable::Deserialize(std::istream& stream)
     {
         return stream.good();
     }
 
-    bool serializable::serialize(std::ostream& stream) const
+    bool Serializable::Serialize(std::ostream& stream) const
     {
         return stream.good();
     }

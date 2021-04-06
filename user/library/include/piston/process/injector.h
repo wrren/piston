@@ -1,31 +1,32 @@
 #ifndef PISTON_PROCESS_INJECTOR_H
 #define PISTON_PROCESS_INJECTOR_H
 
+#include <piston/core/types.h>
 #include <piston/process/process.h>
 #include <filesystem>
 #include <exception>
 
-namespace piston
+namespace Piston
 {
     /**
      * @brief Facilitates injection of shared libraries into processes.
      * 
      */
-    class injector
+    class Injector
     {
     public:
 
-        typedef std::filesystem::path library_path;
-        typedef std::filesystem::path executable_path;
-        typedef std::vector<std::string> argument_list;
+        typedef Path LibraryPath;
+        typedef Path ExecutablePath;
+        typedef std::vector<String> ArgumentList;
 
-        enum class mode
+        enum class InjectMode
         {
             MODE_INJECT_NEW,
             MODE_INJECT_RUNNING
         };
 
-        class injection_exception : public std::exception
+        class Exception : public std::exception
         {
         public:
 
@@ -34,7 +35,7 @@ namespace piston
              * 
              * @param what Error message
              */
-            injection_exception(const std::string& what);
+            Exception(const std::string& what);
 
             /**
              * @brief Get the human-readable error message for this injection exception
@@ -56,7 +57,7 @@ namespace piston
          * @return true If injection succeeds
          * @return false If injection fails
          */
-        static injector inject(const library_path& library_path, process::id_type process_id);
+        static Injector Inject(const LibraryPath& library_path, Process::IDType process_id);
 
         /**
          * @brief Attempt to inject the library at the given path into a new instance of the executable at the given path.
@@ -67,28 +68,28 @@ namespace piston
          * @return true If injection succeeds
          * @return false If injection fails
          */
-        static injector inject(const library_path& library_path, const executable_path& executable_path, const argument_list& args = {});
+        static Injector Inject(const LibraryPath& library_path, const ExecutablePath& executable_path, const ArgumentList& args = {});
 
         /**
          * @brief Get the injection mode for this injection
          * 
          * @return Injection mode 
          */
-        mode get_mode() const;
+        InjectMode GetMode() const;
 
         /**
          * @brief Get the path to the library being injected into the target executable or process. 
          * 
          * @return Path to the library being injected into the target executable or process. 
          */
-        const library_path& get_library_path() const;
+        const LibraryPath& GetLibraryPath() const;
 
         /**
          * @brief Get the ID of the process into which a library has been injected.
          * 
          * @return ID of the process into which a library has been injected.
          */
-        process::id_type get_process_id() const;
+        Process::IDType GetProcessID() const;
 
     protected:
 
@@ -99,17 +100,17 @@ namespace piston
          * @param library_path Path to the library being injected into the target executable or process
          * @param process_id Target process for injection
          */
-        injector(mode mode, const library_path& library_path, process::id_type process_id);
+        Injector(InjectMode mode, const LibraryPath& library_path, Process::IDType process_id);
 
     private:
 
         /// Injection Mode
-        mode m_mode;
+        InjectMode mMode;
         /// Path to the library being injected
-        library_path m_library_path;
+        LibraryPath mLibraryPath;
         /// ID of the process into which the library is being injected
-        process::id_type m_process_id;
+        Process::IDType mProcessID;
     };
-} // namespace piston
+} // namespace Piston
 
 #endif // PISTON_PROCESS_INJECTOR_H

@@ -1,6 +1,6 @@
 #include <piston/file/header/pe.h>
 
-namespace piston
+namespace Piston
 {
     
 }

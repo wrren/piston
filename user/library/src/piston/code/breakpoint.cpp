@@ -1,68 +1,68 @@
 #include <piston/code/breakpoint.h>
 #include <algorithm>
 
-namespace piston
+namespace Piston
 {
-    breakpoint::list breakpoint::g_breakpoints;
-    std::mutex breakpoint::g_mutex;
+    Breakpoint::ListType Breakpoint::gBreakpoints;
+    std::mutex Breakpoint::gMutex;
 
-    breakpoint::check_exception::check_exception(const char* message) :
-    m_message(message)
+    Breakpoint::CheckException::CheckException(const char* message) :
+    mMessage(message)
     {}
 
-    const char* breakpoint::check_exception::what() const noexcept
+    const char* Breakpoint::CheckException::what() const noexcept
     {
-        return m_message.c_str();
+        return mMessage.c_str();
     }
 
-    breakpoint::set_exception::set_exception(const char* message) :
-    m_message(message)
+    Breakpoint::SetException::SetException(const char* message) :
+    mMessage(message)
     {}
 
-    const char* breakpoint::set_exception::what() const noexcept
+    const char* Breakpoint::SetException::what() const noexcept
     {
-        return m_message.c_str();
+        return mMessage.c_str();
     }
 
-    breakpoint::breakpoint(handler_address handler, breakpoint_address breakpoint, size_type size, register_number register_number, break_type type) :
-    m_handler(handler),
-    m_address(breakpoint),
-    m_size(size),
-    m_register(register_number),
-    m_type(type),
-    m_scope(breakpoint::scope::BP_SCOPE_GLOBAL)
+    Breakpoint::Breakpoint(HandlerAddress handler, BreakpointAddress breakpoint, SizeType size, Register register_number, BreakType type) :
+    mHandler(handler),
+    mAddress(breakpoint),
+    mSize(size),
+    mRegister(register_number),
+    mType(type),
+    mScope(Breakpoint::Scope::BP_SCOPE_GLOBAL)
     {
-        std::lock_guard<std::mutex> guard(g_mutex);
-        g_breakpoints.push_back(*this);
+        std::lock_guard<std::mutex> guard(gMutex);
+        gBreakpoints.push_back(*this);
     }
 
-    breakpoint::breakpoint(handler_address handler, breakpoint_address breakpoint, size_type size, register_number register_number, break_type type, platform::thread_id thread_id) :
-    m_thread(thread_id),
-    m_handler(handler),
-    m_address(breakpoint),
-    m_size(size),
-    m_register(register_number),
-    m_type(type),
-    m_scope(breakpoint::scope::BP_SCOPE_THREAD)
+    Breakpoint::Breakpoint(HandlerAddress handler, BreakpointAddress breakpoint, SizeType size, Register register_number, BreakType type, Platform::ThreadID thread_id) :
+    mThread(thread_id),
+    mHandler(handler),
+    mAddress(breakpoint),
+    mSize(size),
+    mRegister(register_number),
+    mType(type),
+    mScope(Breakpoint::Scope::BP_SCOPE_THREAD)
     {
-        std::lock_guard<std::mutex> guard(g_mutex);
-        g_breakpoints.push_back(*this);
+        std::lock_guard<std::mutex> guard(gMutex);
+        gBreakpoints.push_back(*this);
     }
 
-    void breakpoint::hit()
+    void Breakpoint::WasHit()
     {
-        std::lock_guard<std::mutex> guard(g_mutex);
-        g_breakpoints.erase(std::remove(g_breakpoints.begin(), g_breakpoints.end(), *this), g_breakpoints.end());
-        unset(m_register, breakpoint::scope::BP_SCOPE_GLOBAL);
-        unset(m_register, breakpoint::scope::BP_SCOPE_THREAD);
+        std::lock_guard<std::mutex> guard(gMutex);
+        gBreakpoints.erase(std::remove(gBreakpoints.begin(), gBreakpoints.end(), *this), gBreakpoints.end());
+        Unset(mRegister, Breakpoint::Scope::BP_SCOPE_GLOBAL);
+        Unset(mRegister, Breakpoint::Scope::BP_SCOPE_THREAD);
     }
 
-    bool breakpoint::operator==(const breakpoint& other) const
+    bool Breakpoint::operator==(const Breakpoint& other) const
     {
-        return  m_scope         == other.m_scope   &&
-                m_handler       == other.m_handler      &&
-                m_address    == other.m_address   &&
-                m_register      == other.m_register     &&
-                m_size          == other.m_size;
+        return  mScope         == other.mScope   &&
+                mHandler       == other.mHandler      &&
+                mAddress    == other.mAddress   &&
+                mRegister      == other.mRegister     &&
+                mSize          == other.mSize;
     }
 }

@@ -1,33 +1,33 @@
 #include <piston/process/injector.h>
 
-namespace piston
+namespace Piston
 {
-    injector::injector(injector::mode mode, const injector::library_path& library_path, process::id_type process_id) :
-    m_mode(mode),
-    m_library_path(library_path),
-    m_process_id(process_id)
+    Injector::Injector(Injector::InjectMode mode, const Injector::LibraryPath& library_path, Process::IDType process_id) :
+    mMode(mode),
+    mLibraryPath(library_path),
+    mProcessID(process_id)
     {}
 
-    injector::mode injector::get_mode() const
+    Injector::InjectMode Injector::GetMode() const
     {
-        return m_mode;
+        return mMode;
     }
 
-    process::id_type injector::get_process_id() const
+    Process::IDType Injector::GetProcessID() const
     {
-        return m_process_id;
+        return mProcessID;
     }
 
-    const injector::library_path& injector::get_library_path() const
+    const Injector::LibraryPath& Injector::GetLibraryPath() const
     {
-        return m_library_path;
+        return mLibraryPath;
     }
 
-    injector::injection_exception::injection_exception(const std::string& what) :
+    Injector::Exception::Exception(const std::string& what) :
     m_what(what)
     {}
 
-    const char* injector::injection_exception::what() const noexcept
+    const char* Injector::Exception::what() const noexcept
     {
         return m_what.c_str();
     }

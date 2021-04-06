@@ -3,13 +3,13 @@
 
 #include <piston/core/types.h>
 
-namespace piston::platform
+namespace Piston::Platform
 {
-    typedef int process_id;
+    typedef int ProcessID;
 
-    typedef string process_name;
+    typedef String ProcessName;
 
-    typedef int thread_id;
+    typedef int ThreadID;
 }
 
 #endif // PISTON_PLATFORM_MAC_TYPES_H

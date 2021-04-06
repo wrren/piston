@@ -3,32 +3,32 @@
 
 #include <piston/core/core.h>
 
-namespace piston
+namespace Piston
 {
-    class file : public serializable
+    class File : public Serializable
     {
     public:
-        typedef std::shared_ptr<file> ptr_type;
+        typedef std::shared_ptr<File> PointerType;
 
         /**
          * @brief Construct a new file object
          * 
          */
-        file();
+        File();
 
         /**
          * @brief Construct a new file object with the specified path
          * 
          * @param path Path to the file
          */
-        file(const path& path);
+        File(const Path& path);
 
         /**
          * @brief Get the path to this file.
          * 
          * @return const path& Path to this file.
          */
-        const path& get_path() const;
+        const Path& GetPath() const;
 
         /**
          * @brief Assign the given path to this file.
@@ -36,30 +36,30 @@ namespace piston
          * @param path New path
          * @return path& 
          */
-        file& operator=(const path& path);
+        File& operator=(const Path& path);
 
         /**
-         * @brief Read data from the file. Calls deserialize() using the file's file stream, child classes should
-         * override the deserialize() method in order to implement specific read behaviour.
+         * @brief Read data from the file. Calls Deserialize() using the file's file stream, child classes should
+         * override the Deserialize() method in order to implement specific read behaviour.
          * 
          * @return true If file deserialization succeeded.
          * @return false Otherwise.
          */
-        bool read();
+        bool Read();
 
         /**
-         * @brief Write data to the file. Calls serialize() using the file's file stream, child classes should override
-         * the serialize() method in order to implement specific write behaviour
+         * @brief Write data to the file. Calls Serialize() using the file's file stream, child classes should override
+         * the Serialize() method in order to implement specific write behaviour
          * 
          * @return true If file serialization succeeded.
          * @return false Otherwise.
          */
-        bool write();
+        bool Write();
 
     private:
 
         // Path to this file
-        path m_path;
+        Path mPath;
     };
 }
 

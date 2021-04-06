@@ -32,28 +32,28 @@ LONG VectoredExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
         ++(context->Rip);
     }
 
-    auto current_process = piston::process::current_process();
+    auto current_process = Piston::Process::CurrentProcess();
     if(!current_process)
     {
         DebugPrint("Failed to get current process.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
     }
 
-    auto base_address = current_process->get_base_address();
+    auto base_address = current_process->GetBaseAddress();
     if(!base_address)
     {
         DebugPrint("Failed to get process base address.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
     }
 
-    piston::process::base_address parameter_address = base_address.value() + THREAD_PRINT_OFFSET;
+    Piston::Process::AddressType parameter_address = base_address.value() + THREAD_PRINT_OFFSET;
 
-    DebugPrint(piston::format("Rewriting Printf Parameter at ", std::hex, parameter_address, "\n").c_str());
+    DebugPrint(Piston::Format("Rewriting Printf Parameter at ", std::hex, parameter_address, "\n").c_str());
 
     uint32_t new_parameter = 0;
     size_t bytes_written;
 
-    if(!current_process->write_memory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
+    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
     {
         DebugPrint("Failed to write process memory.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
@@ -61,12 +61,12 @@ LONG VectoredExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 
     parameter_address = base_address.value() + THREAD_SLEEP_OFFSET;
 
-    DebugPrint(piston::format("Rewriting Sleep Parameter at ", std::hex, parameter_address, "\n").c_str());
+    DebugPrint(Piston::Format("Rewriting Sleep Parameter at ", std::hex, parameter_address, "\n").c_str());
 
     new_parameter = 0;
     bytes_written;
 
-    if(!current_process->write_memory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
+    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
     {
         DebugPrint("Failed to write process memory.\n");
         return EXCEPTION_CONTINUE_EXECUTION;
@@ -74,12 +74,12 @@ LONG VectoredExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 
     parameter_address = base_address.value() + THREAD_RETURN_OFFSET;
 
-    DebugPrint(piston::format("Rewriting Return Value at ", std::hex, parameter_address, "\n").c_str());
+    DebugPrint(Piston::Format("Rewriting Return Value at ", std::hex, parameter_address, "\n").c_str());
 
     new_parameter = 0;
     bytes_written;
 
-    if(!current_process->write_memory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
+    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
     {
         DebugPrint("Failed to write process memory.\n");
         return EXCEPTION_CONTINUE_EXECUTION;

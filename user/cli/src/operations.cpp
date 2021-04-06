@@ -6,15 +6,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-namespace piston::cli
+namespace Piston::cli
 {
     void list(std::ostream& output_stream, std::ostream& error_stream)
     {
-        piston::process::list_type processes;
+        Piston::Process::ListType processes;
 
         try
         {
-            processes = piston::process::list();
+            processes = Piston::Process::List();
         }
         catch (std::exception& e)
         {
@@ -23,11 +23,11 @@ namespace piston::cli
 
         for (auto process : processes)
         {
-            output_stream << std::setw(10) << std::left << process->get_id() << process->get_name() << std::endl;
+            output_stream << std::setw(10) << std::left << process->GetID() << process->GetName() << std::endl;
         }
     }
 
-    void load(std::ostream& output_stream, std::ostream& error_stream, const piston::path& library_path)
+    void load(std::ostream& output_stream, std::ostream& error_stream, const Piston::Path& library_path)
     {
         auto module = LoadLibraryA(library_path.string().c_str());
         if(module == NULL)
@@ -41,12 +41,12 @@ namespace piston::cli
         }
     }
 
-    void inject_into_process(std::ostream& output_stream, std::ostream& error_stream, const piston::injector::library_path& library_path, piston::process::id_type process_id)
+    void inject_into_process(std::ostream& output_stream, std::ostream& error_stream, const Piston::Injector::LibraryPath& library_path, Piston::Process::IDType process_id)
     {
         try
         {
-            auto injector = injector::inject(library_path, process_id);
-            output_stream << "Library injected into process ID " << injector.get_process_id() << std::endl;
+            auto injector = Injector::Inject(library_path, process_id);
+            output_stream << "Library injected into process ID " << injector.GetProcessID() << std::endl;
         }
         catch(const std::exception& e)
         {
@@ -54,12 +54,12 @@ namespace piston::cli
         }
     }
 
-    void inject_into_executable(std::ostream& output_stream, std::ostream& error_stream, const piston::injector::library_path& library_path, const piston::injector::executable_path& executable_path, const piston::injector::argument_list& arguments)
+    void inject_into_executable(std::ostream& output_stream, std::ostream& error_stream, const Piston::Injector::LibraryPath& library_path, const Piston::Injector::ExecutablePath& executable_path, const Piston::Injector::ArgumentList& arguments)
     {
         try
         {
-            auto injector = injector::inject(library_path, executable_path, arguments);
-            output_stream << "Library injected into process ID " << injector.get_process_id() << std::endl;
+            auto injector = Injector::Inject(library_path, executable_path, arguments);
+            output_stream << "Library injected into process ID " << injector.GetProcessID() << std::endl;
         }
         catch(const std::exception& e)
         {
@@ -67,28 +67,28 @@ namespace piston::cli
         }
     }
 
-    void read_file(std::ostream& output_stream, std::ostream& error_stream, const piston::path path)
+    void read_file(std::ostream& output_stream, std::ostream& error_stream, const Piston::Path path)
     {
         try
         {
-            auto file = pe_file(path);
+            auto file = PEFile(path);
             
-            if(!file.read())
+            if(!file.Read())
             {
                 error_stream << "Error during file read." << std::endl;
                 return;
             }
 
-            if(!file.is_valid())
+            if(!file.IsValid())
             {
-                error_stream << "PE file invalid. magic value: " << std::hex << file.get_dos_header().e_magic << ", expected " << std::hex << file.get_dos_header().k_magic << std::endl;
+                error_stream << "PE file invalid. magic value: " << std::hex << file.GetDOSHeader().e_magic << ", expected " << std::hex << file.GetDOSHeader().k_magic << std::endl;
                 return;
             }
 
-            output_stream << "PE file valid! PE Offset: " << std::hex << file.get_dos_header().e_ifanew << std::endl;
-            output_stream << "Number of sections: " << file.get_image_file_header().number_of_sections << std::endl;
-            output_stream << "Timestamp: " << file.get_image_file_header().timestamp << std::endl;
-            output_stream << "Size of code: " << file.get_image_optional_header().size_of_code.get() << std::endl;
+            output_stream << "PE file valid! PE Offset: " << std::hex << file.GetDOSHeader().e_ifanew << std::endl;
+            output_stream << "Number of sections: " << file.GetImageFileHeader().NumberOfSections << std::endl;
+            output_stream << "Timestamp: " << file.GetImageFileHeader().Timestamp << std::endl;
+            output_stream << "Size of code: " << file.GetImageOptionalHeader().SizeOfCode.GetValue() << std::endl;
         }
         catch(const std::exception& e)
         {

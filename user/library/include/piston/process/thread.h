@@ -1,9 +1,9 @@
 #ifndef PISTON_PROCESS_THREAD_H
 #define PISTON_PROCESS_THREAD_H
 
-namespace piston
+namespace Piston
 {
-    class thread
+    class Thread
     {
     public:
 

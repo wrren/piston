@@ -3,14 +3,15 @@
 
 #include <piston/core/types.h>
 
-namespace piston
+namespace Piston
 {
     template<typename T>
-    class buffer_ref
+    class BufferRef
     {
     public:
 
-        typedef byte* buffer_ptr;
+        typedef uint8_t*    BufferPointer;
+        typedef size_t      SizeType;
 
         /**
          * @brief Construct a new buffer ref object
@@ -18,9 +19,9 @@ namespace piston
          * @param ptr Pointer to the buffer containing the buffer_ref's data
          * @param offset Offset into the buffer where the data begins
          */
-        buffer_ref(buffer_ptr* ptr, size_t offset) :
-        m_ptr(ptr),
-        m_offset(offset)
+        BufferRef(BufferPointer ptr, SizeType offset) :
+        mPointer(ptr),
+        mOffset(offset)
         {}
 
         /**
@@ -29,9 +30,9 @@ namespace piston
          * @param val New value
          * @return buffer_ref<T>& This object
          */
-        buffer_ref<T>& operator=(const T& val)
+        BufferRef<T>& operator=(const T& val)
         {
-            *(reinterpret_cast<T*>(*m_ptr + m_offset)) = val;
+            *(reinterpret_cast<T*>(mPointer + mOffset)) = val;
             return *this;
         }
 
@@ -42,25 +43,25 @@ namespace piston
          */
         operator T() const
         {
-            return *(reinterpret_cast<const T*>(*m_ptr + m_offset));
+            return *(reinterpret_cast<const T*>(mPointer + mOffset));
         }
 
         /**
-         * @brief Get the value that this reference is pointing to
+         * @brief Get the value pointed at by this buffer reference.
          * 
          * @return T 
          */
-        T get() const
+        T GetValue() const
         {
-            return *(reinterpret_cast<const T*>(*m_ptr + m_offset));
+            return *(reinterpret_cast<const T*>(mPointer + mOffset));
         }
 
     private:
 
         // Pointer to the buffer read and written to by this buffer_ref
-        buffer_ptr* m_ptr;
+        BufferPointer mPointer;
         // Offset into the buffer where this buffer_ref's data begins
-        size_t m_offset;
+        size_t mOffset;
     };
 }
 

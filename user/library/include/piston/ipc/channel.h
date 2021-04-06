@@ -4,26 +4,13 @@
 #include <piston/process/process.h>
 #include <piston/ipc/message.h>
 
-namespace piston::ipc
+namespace Piston::IPC
 {
-    class channel
+    class Channel
     {
     public:
 
-        typedef std::shared_ptr<channel> ptr_type;
-
-        /**
-         *  Open an IPC channel for communication with the target process.
-         */
-        channel(process::ptr_type target);
-
-        /**
-         * @brief  Opens a channel for communication with the target process.
-         * 
-         * @return true If the channel was opened.
-         * @return false Otherwise.
-         */
-        bool open();
+        typedef std::shared_ptr<Channel> PointerType;
 
         /**
          * @brief Send a message to the target process
@@ -32,24 +19,58 @@ namespace piston::ipc
          * @return true If the message was sent successfully
          * @return false Otherwise
          */
-        bool send(const message& message);
+        void Send(const Message& message);
 
         /**
-         * @brief Receive pending messages from the channel
+         * @brief Receive a message from the channel's inbox
          * 
-         * @return std::vector<message> 
+         * @param message Mesage to be received
+         * @return true If there was a message in the inbox to be received
+         *         false Otherwise
          */
-        std::vector<message> receive();
+        bool Receive(Message& message);
 
         /**
-         * @brief Destroy this channel object
+         * @brief Get the target process for this channel
          * 
+         * @return process::ptr_type 
          */
-        ~channel();
+        Process::IDType GetTarget() const;
+
+    protected:
+
+        /**
+         *  Open an IPC channel for communication with the target process.
+         */
+        Channel(Process::IDType target);
+
+        /**
+         * @brief Push a new message onto this channel's inbox.
+         * 
+         * @param message New message
+         */
+        void PushMessage(const Message& message);
+
+        /**
+         * @brief Pop a message off the channel's outbox
+         * 
+         * @param message Output message
+         * @return true If there were messages to be popped
+         *         false Otherwise
+         */
+        bool PopOutbox(Message& message);
 
     private:
 
-        process::ptr_type m_target;
+        // Allow router to access our message queues.
+        friend class Router;
+
+        // Target Process ID
+        Process::IDType mTarget;
+        // Outgoing message queue
+        std::deque<Message> mOutbox;
+        // Incoming message queue
+        std::deque<Message> mInbox;
     };
 }
 

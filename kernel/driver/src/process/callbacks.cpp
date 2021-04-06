@@ -1,6 +1,6 @@
 #include "callbacks.h"
 
-namespace piston
+namespace Piston
 {
     void ProcessLifecycleCallback(HANDLE ParentId, HANDLE ProcessId, BOOLEAN Create)
     {

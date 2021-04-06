@@ -3,13 +3,12 @@
 
 #include <piston/core/core.h>
 #include <piston/file/header.h>
-#include <piston/core/buffer.h>
 
-#define PISTON_PE_DOS_HEADER_SIZE 64
+#define DOS_HEADER_SIZE 64
 
-namespace piston
+namespace Piston
 {
-    class dos_header : public header
+    class DOSHeader : public Header
     {
     public:
 
@@ -17,15 +16,15 @@ namespace piston
         static const uint16_t k_magic;
 
         // Magic Value
-        buffer_ref<uint16_t> e_magic;
+        BufferRef<uint16_t> e_magic;
         // Offset to PE header
-        buffer_ref<uint32_t> e_ifanew;
+        BufferRef<uint32_t> e_ifanew;
 
         /**
          * @brief Construct a new DOS header
          * 
          */
-        dos_header();
+        DOSHeader();
 
         /**
          * @brief Deserialize a DOS header from the given stream
@@ -34,7 +33,7 @@ namespace piston
          * @return true If the data deserialized correctly
          * @return false Otherwise
          */
-        virtual bool deserialize(std::istream& stream) override;
+        virtual bool Deserialize(std::istream& stream) override;
 
         /**
          * @brief Serialize a DOS header to the given stream
@@ -43,7 +42,7 @@ namespace piston
          * @return true If the data serialized correctly
          * @return false Otherwise
          */
-        virtual bool serialize(std::ostream& stream) const override;
+        virtual bool Serialize(std::ostream& stream) const override;
 
         /**
          * @brief Determine whether the contained DOS header data is valid
@@ -51,33 +50,27 @@ namespace piston
          * @return true If this DOS header is valid
          * @return false Otherwise
          */
-        virtual bool is_valid() const override;
+        virtual bool IsValid() const override;
 
         /**
          * @brief Get the size, in bytes, of this header
          * 
          * @return size_t Header size in bytes
          */
-        virtual size_t size() const override;
+        virtual size_t Size() const override;
 
         /**
          * @brief Get a pointer to the start of this header's data
          * 
-         * @return ptr_type Pointer to header data
+         * @return PointerType Pointer to header data
          */
-        virtual ptr_type data() override;
-        virtual const_ptr_type data() const override;
-
-        /**
-         * @brief Destroy the dos header object
-         * 
-         */
-        ~dos_header();
+        virtual PointerType Data() override;
+        virtual ConstPointerType Data() const override;
 
     private:
 
         // Header Data
-        byte* m_data;
+        uint8_t m_data[DOS_HEADER_SIZE];
     };
 }
 

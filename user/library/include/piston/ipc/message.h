@@ -4,11 +4,34 @@
 #include <piston/core/types.h>
 #include <piston/process/process.h>
 
-namespace piston::ipc
+namespace Piston::IPC
 {
-    class message : public serializable
+    class Message : public Serializable
     {
     public:
+
+        typedef uint16_t CommandType;
+        typedef std::shared_ptr<Message> PointerType;
+
+        /**
+         * @brief Construct a new message object
+         * 
+         */
+        Message() = default;
+
+        /**
+         * @brief Construct a new message object
+         * 
+         * @param command Command ID
+         */
+        Message(CommandType command);
+
+        /**
+         * @brief Get the Command ID of this message
+         * 
+         * @return CommandType 
+         */
+        CommandType GetCommand() const;
 
         /**
          * @brief Deserialize data from the given stream
@@ -17,7 +40,7 @@ namespace piston::ipc
          * @return true If this object was deserialized correctly
          * @return false Otherwise
          */
-        virtual bool deserialize(std::istream& stream) override;
+        virtual bool Deserialize(std::istream& stream) = 0;
 
         /**
          * @brief Serialize data into the given stream
@@ -26,16 +49,14 @@ namespace piston::ipc
          * @return true If this object was serialized correctly
          * @return false Otherwise
          */
-        virtual bool serialize(std::ostream& stream) const override;
+        virtual bool Serialize(std::ostream& stream) const = 0;
 
     private:
 
+        // Message command
+        CommandType mCommand;
         // Source process ID
-        process::id_type m_process;
-        // Message sequence number
-        uint32_t m_sequence;
-        // Internal data buffer
-        std::vector<byte> m_data;
+        Process::IDType mProcessID;
     };
 }
 

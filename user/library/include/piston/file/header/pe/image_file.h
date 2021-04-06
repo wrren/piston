@@ -5,13 +5,13 @@
 
 #define PISTON_PE_IMAGE_FILE_HEADER_SIZE 20
 
-namespace piston
+namespace Piston
 {
-    class image_file_header : public header
+    class ImageFileHeader : public Header
     {
     public:
 
-        enum class machine_type : uint16_t
+        enum class MachineType : uint16_t
         {
             MACHINE_UNKNOWN = 0,
             MACHINE_AM33    = 0x1d3,
@@ -22,45 +22,45 @@ namespace piston
         };
 
         // Machine Type
-        buffer_ref<machine_type> machine;
+        BufferRef<MachineType> Machine;
         // Number of PE sections in the file
-        buffer_ref<uint16_t> number_of_sections;
+        BufferRef<uint16_t> NumberOfSections;
         // Time at which the file was compiled
-        buffer_ref<uint32_t> timestamp;
+        BufferRef<uint32_t> Timestamp;
         // Size of the optional header
-        buffer_ref<uint16_t> optional_header_size;
+        BufferRef<uint16_t> OptionalHeaderSize;
 
         /**
          * @brief Construct a new image file header object
          * 
          */
-        image_file_header();
+        ImageFileHeader();
 
         /**
          * @brief Get the size, in bytes, of this header
          * 
          * @return size_t Header size in bytes
          */
-        virtual size_t size() const override;
+        virtual size_t Size() const override;
 
         /**
          * @brief Get a pointer to the start of this header's data
          * 
-         * @return ptr_type Pointer to header data
+         * @return PointerType Pointer to header data
          */
-        virtual ptr_type data() override;
-        virtual const_ptr_type data() const override;
+        virtual PointerType Data() override;
+        virtual ConstPointerType Data() const override;
 
         /**
          * @brief Destroy the image file header object
          * 
          */
-        ~image_file_header();
+        ~ImageFileHeader();
 
     private:
 
         // Header data
-        byte* m_data;
+        byte* mData;
     };
 }
 

@@ -12,14 +12,14 @@ extern "C"
 
         DriverObject->DriverUnload = DriverUnload;
 
-        PsSetCreateProcessNotifyRoutine(piston::ProcessLifecycleCallback, FALSE);
+        PsSetCreateProcessNotifyRoutine(Piston::ProcessLifecycleCallback, FALSE);
 
         return STATUS_SUCCESS;
     }
 
     void DriverUnload(PDRIVER_OBJECT DriverObject)
     {
-        PsSetCreateProcessNotifyRoutine(piston::ProcessLifecycleCallback, TRUE);
+        PsSetCreateProcessNotifyRoutine(Piston::ProcessLifecycleCallback, TRUE);
         return;
     }
 }

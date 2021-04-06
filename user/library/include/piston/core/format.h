@@ -4,24 +4,24 @@
 #include <string>
 #include <sstream>
 
-namespace piston
+namespace Piston
 {
     template<typename T>
-    std::wstring wformat(std::wstringstream* stream, T last)
+    std::wstring WideFormat(std::wstringstream* stream, T last)
     {
         (*stream) << last;
         return stream->str();
     }
 
     template<typename T, typename ...Args>
-    std::wstring wformat(std::wstringstream* stream, T first, Args... rest)
+    std::wstring WideFormat(std::wstringstream* stream, T first, Args... rest)
     {
         (*stream) << first;
-        return wformat(stream, rest...);
+        return WideFormat(stream, rest...);
     }
 
     template<typename T>
-    std::wstring wformat(T first)
+    std::wstring WideFormat(T first)
     {
         std::wstringstream stream;
         stream << first;
@@ -29,28 +29,28 @@ namespace piston
     }
 
     template<typename T, typename ...Args>
-    std::wstring wformat(T first, Args... rest)
+    std::wstring WideFormat(T first, Args... rest)
     {
         std::wstringstream stream;
-        return wformat(&stream, first, rest...);
+        return WideFormat(&stream, first, rest...);
     }
 
     template<typename T>
-    std::string format(std::stringstream* stream, T last)
+    std::string Format(std::stringstream* stream, T last)
     {
         (*stream) << last;
         return stream->str();
     }
 
     template<typename T, typename ...Args>
-    std::string format(std::stringstream* stream, T first, Args... rest)
+    std::string Format(std::stringstream* stream, T first, Args... rest)
     {
         (*stream) << first;
-        return format(stream, rest...);
+        return Format(stream, rest...);
     }
 
     template<typename T>
-    std::string format(T first)
+    std::string Format(T first)
     {
         std::stringstream stream;
         stream << first;
@@ -58,10 +58,10 @@ namespace piston
     }
     
     template<typename T, typename ...Args>
-    std::string format(T first, Args... rest)
+    std::string Format(T first, Args... rest)
     {
         std::stringstream stream;
-        return format(&stream, first, rest...);
+        return Format(&stream, first, rest...);
     }
 }
 

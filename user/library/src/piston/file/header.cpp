@@ -1,8 +1,8 @@
 #include <piston/file/header.h>
 
-namespace piston
+namespace Piston
 {
-    bool header::is_valid() const
+    bool Header::IsValid() const
     {
         return true;
     }

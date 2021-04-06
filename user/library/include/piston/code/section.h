@@ -3,13 +3,13 @@
 
 #include <piston/core/types.h>
 
-namespace piston
+namespace Piston
 {
-    class code_section
+    class CodeSection
     {
     public:
 
-        typedef string name_type;
+        typedef String NameType;
 
         
     };

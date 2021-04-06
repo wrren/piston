@@ -3,13 +3,13 @@
 
 #include <string>
 
-namespace piston
+namespace Piston
 {
     /**
      * @brief Type conversion utility class.
      * 
      */
-    class convert
+    class Convert
     {
     public:
 
@@ -19,7 +19,7 @@ namespace piston
          * @param string Input string
          * @return std::wstring Output wide character string
          */
-        static std::wstring to_wstring(const std::string& string);
+        static std::wstring ToWideString(const std::string& string);
     };
 }
 

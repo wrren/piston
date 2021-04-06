@@ -7,14 +7,18 @@
 #include <filesystem>
 #include <cstdint>
 #include <exception>
+#include <deque>
+#include <vector>
+#include <map>
+#include <functional>
 
-namespace piston
+namespace Piston
 {
-  typedef std::string string;
-  typedef std::wstring wstring;
-  typedef std::stringstream stringstream;
-  typedef std::wstringstream wstringstream;
-  typedef std::filesystem::path path;
+  typedef std::string String;
+  typedef std::wstring WideString;
+  typedef std::stringstream StringStream;
+  typedef std::wstringstream WideStringStream;
+  typedef std::filesystem::path Path;
   typedef uint8_t byte;
 }
 

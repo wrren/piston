@@ -4,13 +4,13 @@
 #include <windows.h>
 #include <piston/core/types.h>
 
-namespace piston::platform
+namespace Piston::Platform
 {
-    typedef DWORD process_id;
+    typedef DWORD ProcessID;
 
-    typedef string process_name;
+    typedef String ProcessName;
 
-    typedef HANDLE thread_id;
+    typedef HANDLE ThreadID;
 }
 
 #endif // PISTON_PLATFORM_WINDOWS_TYPES_H

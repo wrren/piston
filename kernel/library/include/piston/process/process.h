@@ -3,9 +3,9 @@
 
 #include <vector>
 
-namespace piston
+namespace Piston
 {
-    class process
+    class Process
     {
     public:
 
@@ -22,14 +22,14 @@ namespace piston
              * 
              * @param process The created process
              */
-            virtual void on_create(const process& process);
+            virtual void on_create(const Process& process);
 
             /**
              * @brief Called when a running process ends and is deleted
              * 
              * @param process The deleted process
              */
-            virtual void on_delete(const process& process);
+            virtual void on_delete(const Process& process);
         };
 
         /**

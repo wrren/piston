@@ -111,7 +111,14 @@
 			"xmemory0": "cpp",
 			"_70_exception": "cpp",
 			"_70_new": "cpp",
-			"_70_xstddef": "cpp"
+			"_70_xstddef": "cpp",
+			"codecvt": "cpp",
+			"*.rh": "cpp",
+			"cassert": "cpp",
+			"cerrno": "cpp",
+			"cfloat": "cpp",
+			"ciso646": "cpp",
+			"climits": "cpp"
 		}
 	}
 }

@@ -3,10 +3,10 @@
 
 #include <piston/core/buffer.h>
 
-namespace piston
+namespace Piston
 {
     template<typename T>
-    class flag : buffer_ref<T>
+    class Flag : BufferRef<T>
     {
     public:
 
@@ -17,9 +17,9 @@ namespace piston
          * @param offset Offset into the buffer where the data can be found
          * @param match Value against which to match the buffer value
          */
-        flag(buffer_ref<T>::buffer_ptr* ptr, size_t offset, T match) :
-        buffer_ref<T>(ptr, offset),
-        m_match(match)
+        Flag(BufferRef<T>::BufferPointer ptr, SizeType offset, T match) :
+        BufferRef<T>(ptr, offset),
+        mMatch(match)
         {}
 
         /**
@@ -31,7 +31,7 @@ namespace piston
          */
         operator bool() const
         {
-            return is_set();
+            return IsSet();
         }
 
         /**
@@ -41,15 +41,15 @@ namespace piston
          * @return true If the buffer value matches the flag value
          * @return false Otherwise
          */
-        bool is_set() const
+        bool IsSet() const
         {
-            return get() == m_match;
+            return GetValue() == mMatch;
         }
 
     private:
 
         // Value against which to match the buffer data
-        T m_match;
+        T mMatch;
     };
 }
 

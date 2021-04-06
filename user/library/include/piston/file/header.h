@@ -5,15 +5,15 @@
 #include <piston/core/serializable.h>
 #include <piston/core/buffer.h>
 
-namespace piston
+namespace Piston
 {
-    class header : public serializable
+    class Header : public Serializable
     {
     public:
 
         // Pointer to data in the header
-        typedef uint8_t*        ptr_type;
-        typedef const uint8_t*  const_ptr_type;
+        typedef uint8_t*        PointerType;
+        typedef const uint8_t*  ConstPointerType;
 
         /**
          * @brief Check whether this header's data is valid.
@@ -21,40 +21,22 @@ namespace piston
          * @return true If the header data is valid
          * @return false Otherwise
          */
-        virtual bool is_valid() const;
+        virtual bool IsValid() const;
 
         /**
          * @brief Get the size, in bytes, of this header
          * 
          * @return size_t Header size in bytes
          */
-        virtual size_t size() const = 0;
+        virtual size_t Size() const = 0;
 
         /**
          * @brief Get a pointer to the start of this header's data
          * 
-         * @return ptr_type Pointer to header data
+         * @return PointerType Pointer to header data
          */
-        virtual ptr_type data() = 0;
-        virtual const_ptr_type data() const = 0;
-
-        /**
-         * @brief Deserialize a header from the given stream
-         * 
-         * @param stream Stream from which to deserialize the header data
-         * @return true If the data deserialized correctly
-         * @return false Otherwise
-         */
-        virtual bool deserialize(std::istream& stream) override;
-
-        /**
-         * @brief Serialize a header into the given stream
-         * 
-         * @param stream Stream into which to serialize the header data
-         * @return true If the data serialized correctly
-         * @return false Otherwise
-         */
-        virtual bool serialize(std::ostream& stream) override;
+        virtual PointerType Data() = 0;
+        virtual ConstPointerType Data() const = 0;
     };
 }
 

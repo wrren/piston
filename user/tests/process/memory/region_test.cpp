@@ -4,14 +4,14 @@
 
 TEST_CASE("Memory Region", "[memory]")
 {
-    piston::memory_region region_a(0x1234, 0x1238);
-    piston::memory_region region_b(0x1236, 0x123A);
-    piston::memory_region region_c(0x123B, 0x123F);
+    Piston::MemoryRegion region_a(0x1234, 4);
+    Piston::MemoryRegion region_b(0x1236, 10);
+    Piston::MemoryRegion region_c(0x123B, 4);
 
     SECTION("Checking for Overlaps")
     {
-        REQUIRE(region_a.overlaps_with(region_b));
-        REQUIRE(region_b.overlaps_with(region_c));
-        REQUIRE_FALSE(region_a.overlaps_with(region_c));
+        REQUIRE(region_a.OverlapsWith(region_b));
+        REQUIRE(region_b.OverlapsWith(region_c));
+        REQUIRE_FALSE(region_a.OverlapsWith(region_c));
     }
 }

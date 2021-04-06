@@ -1,33 +1,33 @@
 #include <piston/file/header/pe/image_file.h>
 
-namespace piston
+namespace Piston
 {
-    image_file_header::image_file_header() :
-    machine(&m_data, 0),
-    number_of_sections(&m_data, 2),
-    timestamp(&m_data, 4),
-    optional_header_size(&m_data, 16)
+    ImageFileHeader::ImageFileHeader() :
+    Machine(mData, 0),
+    NumberOfSections(mData, 2),
+    Timestamp(mData, 4),
+    OptionalHeaderSize(mData, 16)
     {
-        m_data = new byte[PISTON_PE_IMAGE_FILE_HEADER_SIZE];
+        mData = new byte[PISTON_PE_IMAGE_FILE_HEADER_SIZE];
     }
 
-    size_t image_file_header::size() const 
+    size_t ImageFileHeader::Size() const 
     {
         return PISTON_PE_IMAGE_FILE_HEADER_SIZE;
     }
 
-    header::ptr_type image_file_header::data() 
+    Header::PointerType ImageFileHeader::Data() 
     {
-        return m_data;
+        return mData;
     }
 
-    header::const_ptr_type image_file_header::data() const 
+    Header::ConstPointerType ImageFileHeader::Data() const 
     {
-        return m_data;
+        return mData;
     }
 
-    image_file_header::~image_file_header()
+    ImageFileHeader::~ImageFileHeader()
     {
-        delete[] m_data;
+        delete[] mData;
     }
 }

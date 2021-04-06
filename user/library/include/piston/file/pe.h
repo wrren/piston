@@ -6,9 +6,9 @@
 #include <piston/file/header/pe/image_file.h>
 #include <piston/file/header/pe/optional.h>
 
-namespace piston
+namespace Piston
 {
-    class pe_file : public file
+    class PEFile : public File
     {
     public:
 
@@ -16,14 +16,14 @@ namespace piston
          * @brief Construct a new pe file object
          * 
          */
-        pe_file();
+        PEFile();
 
         /**
          * @brief Construct a new pe file read from the given path
          * 
          * @param path 
          */
-        pe_file(const path& path);
+        PEFile(const Path& path);
 
         /**
          * @brief Determine whether this object represents a valid PE file
@@ -31,28 +31,28 @@ namespace piston
          * @return true If this object represents a valid PE file
          * @return false Otherwise
          */
-        bool is_valid() const;
+        bool IsValid() const;
 
         /**
          * @brief Get the DOS header for this PE file
          * 
-         * @return const dos_header& DOS header
+         * @return const DOSHeader& DOS header
          */
-        const dos_header& get_dos_header() const;
+        const DOSHeader& GetDOSHeader() const;
 
         /**
          * @brief Get the PE image file header object
          * 
          * @return const image_file_header& 
          */
-        const image_file_header& get_image_file_header() const;
+        const ImageFileHeader& GetImageFileHeader() const;
 
         /**
          * @brief Get the image optional header object
          * 
-         * @return const image_optional_header& 
+         * @return const ImageOptionalHeader& 
          */
-        const image_optional_header& get_image_optional_header() const;
+        const ImageOptionalHeader& GetImageOptionalHeader() const;
 
         /**
          * @brief Deserialize PE Format data from the given stream
@@ -61,16 +61,16 @@ namespace piston
          * @return true If PE Format data was deserialized successfully.
          * @return false Otherwise
          */
-        virtual bool deserialize(std::istream& stream) override;
+        virtual bool Deserialize(std::istream& stream) override;
 
     private:
 
         // File DOS Header
-        dos_header m_dos_header;
+        DOSHeader mDOSHeader;
         // Image file header
-        image_file_header m_image_file_header;
+        ImageFileHeader mImageFileHeader;
         // Image optional header (Image files only)
-        image_optional_header m_image_optional_header;
+        ImageOptionalHeader mImageOptionalHeader;
     };
 }
 

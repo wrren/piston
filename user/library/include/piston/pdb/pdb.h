@@ -1,9 +1,9 @@
 #ifndef PISTON_PDB_H
 #define PISTON_PDB_H
 
-namespace piston
+namespace Piston
 {
-    class pdb
+    class PDB
     {
 
     };

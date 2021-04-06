@@ -1,10 +1,10 @@
 #include <piston/process/memory/scanner.h>
 
-namespace piston
+namespace Piston
 {
-    memory_scanner::result_type memory_scanner::scan_for_buffer(const memory_region& region, const void* buffer, size_t buffer_size) const    
+    MemoryScanner::ResultType MemoryScanner::ScanForBuffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const    
     {
-        memory_scanner::result_type results;
+        MemoryScanner::ResultType results;
 
         if(buffer_size == 0)
         {
@@ -12,22 +12,17 @@ namespace piston
         }
 
         size_t offset = 0;
-        auto begin = region.begin();
-
-        for(auto it = region.begin(); it != region.end(); ++it)
+        
+        for(auto i = 0; i < data_size; i++)
         {
-            if(offset == buffer_size)
+            if((i + buffer_size) >= data_size)
             {
-                results.push_back(memory_region(begin, it));
-                offset = 0;
-            } 
-            else if(*it == reinterpret_cast<const byte*>(buffer)[offset])
+                break;
+            }
+
+            if(memcmp(data + i, buffer, buffer_size) == 0)
             {
-                if(offset == 0)
-                {
-                    begin = it;
-                }
-                ++offset;
+                results.push_back(i);
             }
         }
 

@@ -3,7 +3,7 @@
 
 #include <ntddk.h>
 
-namespace piston
+namespace Piston
 {
     /**
      * @brief Called when a process is created or destroyed

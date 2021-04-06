@@ -1,8 +1,8 @@
 #include <piston/core/convert.h>
 
-namespace piston
+namespace Piston
 {
-    std::wstring convert::to_wstring(const std::string& string)
+    std::wstring Convert::ToWideString(const std::string& string)
     {
         return std::wstring(string.begin(), string.end());
     }

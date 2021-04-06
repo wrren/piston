@@ -3,9 +3,9 @@
 
 #include <piston/file/header.h>
 
-namespace piston
+namespace Piston
 {
-    class pe_header : public header
+    class PEHeader : public Header
     {
     public:
 
@@ -16,7 +16,7 @@ namespace piston
          * @return true If the data deserialized correctly
          * @return false Otherwise
          */
-        virtual bool deserialize(std::istream& stream) override;
+        virtual bool Deserialize(std::istream& stream) override;
     };
 }
 
