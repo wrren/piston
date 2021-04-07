@@ -3,18 +3,22 @@
 #include <windows.h>
 #include <cstdio>
 #include <cstdint>
+#include <thread>
 #include <Psapi.h>
 #include <piston/core/format.h>
 #include <piston/process/process.h>
+#include <piston/ipc/router.h>
+#include <piston/ipc/messages/log_message.h>
 
-#define THREAD_PRINT_OFFSET     0x1081
-#define THREAD_SLEEP_OFFSET     0x1093
-#define THREAD_RETURN_OFFSET    0x10a4
+#define ROUTER_ID "scout-router"
+
+bool IPCRunning = false;
+std::thread IPCThread;
 
 void DebugPrint(const char* msg)
 {
     FILE* file = NULL;
-    fopen_s(&file, "C:\\Users\\Warren\\Documents\\injector.txt", "a+");
+    fopen_s(&file, "C:\\Users\\wkenny\\scout-log.txt", "a+");
 
     if(file != NULL)
     {
@@ -23,86 +27,45 @@ void DebugPrint(const char* msg)
     }
 }
 
-LONG VectoredExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
+void RunIPC()
 {
-    auto context = ExceptionInfo->ContextRecord;
+    IPCRunning = true;
 
-    if(context)
+    DebugPrint("Starting IPC Thread");
+
+    IPCThread = std::thread([]()
     {
-        ++(context->Rip);
-    }
+        auto ThisProcess = Piston::Process::CurrentProcess();
+        Piston::IPC::Router Router(ThisProcess->GetID(), ROUTER_ID);
+        Piston::IPC::LogMessage::RegisterWith(Router.GetMessageFactory());
+        
+        DebugPrint("Starting Router Pump");
 
-    auto current_process = Piston::Process::CurrentProcess();
-    if(!current_process)
-    {
-        DebugPrint("Failed to get current process.\n");
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
+        while(IPCRunning)
+        {
+            Router.Broadcast(Piston::IPC::Message::PointerType(new Piston::IPC::LogMessage("Broadcast from inside target process!")));
+            Router.Pump();
+            DebugPrint("Router Pumped");
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
+    });
+}
 
-    auto base_address = current_process->GetBaseAddress();
-    if(!base_address)
-    {
-        DebugPrint("Failed to get process base address.\n");
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
-
-    Piston::Process::AddressType parameter_address = base_address.value() + THREAD_PRINT_OFFSET;
-
-    DebugPrint(Piston::Format("Rewriting Printf Parameter at ", std::hex, parameter_address, "\n").c_str());
-
-    uint32_t new_parameter = 0;
-    size_t bytes_written;
-
-    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
-    {
-        DebugPrint("Failed to write process memory.\n");
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
-
-    parameter_address = base_address.value() + THREAD_SLEEP_OFFSET;
-
-    DebugPrint(Piston::Format("Rewriting Sleep Parameter at ", std::hex, parameter_address, "\n").c_str());
-
-    new_parameter = 0;
-    bytes_written;
-
-    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
-    {
-        DebugPrint("Failed to write process memory.\n");
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
-
-    parameter_address = base_address.value() + THREAD_RETURN_OFFSET;
-
-    DebugPrint(Piston::Format("Rewriting Return Value at ", std::hex, parameter_address, "\n").c_str());
-
-    new_parameter = 0;
-    bytes_written;
-
-    if(!current_process->WriteMemory(parameter_address, &new_parameter, sizeof(new_parameter), bytes_written))
-    {
-        DebugPrint("Failed to write process memory.\n");
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
-
-    return EXCEPTION_CONTINUE_EXECUTION;
+void StopIPC()
+{
+    IPCRunning = false;
+    IPCThread.join();
 }
 
 BOOL APIENTRY DllMain(HMODULE hDll, DWORD Reason, LPVOID Reserved)
 {
+    DebugPrint("DllMain Called");
     switch(Reason) {
     case DLL_PROCESS_ATTACH:
-        AddVectoredExceptionHandler(1l, VectoredExceptionHandler);
-        DebugPrint("DLL attach function called.\n");
+        RunIPC();
         break;
     case DLL_PROCESS_DETACH:
-                DebugPrint("DLL detach function called.\n");
-        break;
-    case DLL_THREAD_ATTACH:
-                DebugPrint("DLL thread attach function called.\n");
-        break;
-    case DLL_THREAD_DETACH:
-                DebugPrint("DLL thread detach function called.\n");
+        // StopIPC();
         break;
     }
 

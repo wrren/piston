@@ -7,17 +7,20 @@
 
 namespace Piston
 {
-    Injector Injector::Inject(const Injector::LibraryPath& library_path, Process::IDType process_id)
+    Injector Injector::Inject(const Injector::LibraryPath& LibraryPath, Process::IDType process_id)
     {
-        if(!std::filesystem::exists(library_path))
+        auto NormalizedPath(LibraryPath);
+        NormalizedPath.make_preferred();
+
+        if(!std::filesystem::exists(NormalizedPath))
         {
-            throw Injector::Exception(Format("Library file could not be found at path ", library_path));
+            throw Injector::Exception(Format("Library file could not be found at path ", NormalizedPath));
         }
 
         char library_path_buf[_MAX_PATH];
         memset(library_path_buf, '\0', _MAX_PATH);
         
-        if(strcpy_s(library_path_buf, _MAX_PATH, library_path.string().c_str()))
+        if(strcpy_s(library_path_buf, _MAX_PATH, NormalizedPath.string().c_str()))
         {
             throw Injector::Exception("Failed to allocate space for library path.");
         }
@@ -70,11 +73,14 @@ namespace Piston
 
         VirtualFreeEx(process_handle.get(), library_address, 0, MEM_RELEASE);
 
-        return Injector(Injector::InjectMode::MODE_INJECT_RUNNING, library_path, process_id);
+        return Injector(Injector::InjectMode::MODE_INJECT_RUNNING, NormalizedPath, process_id);
     }
     
-    Injector Injector::Inject(const Injector::LibraryPath& library_path, const Injector::ExecutablePath& executable_path, const Injector::ArgumentList& arguments)
+    Injector Injector::Inject(const Injector::LibraryPath& LibraryPath, const Injector::ExecutablePath& executable_path, const Injector::ArgumentList& arguments)
     {
+        auto NormalizedPath(LibraryPath);
+        NormalizedPath.make_preferred();
+
         auto w_executable_path = Convert::ToWideString(executable_path.string());
         auto w_current_directory = Convert::ToWideString(executable_path.parent_path().string());
         auto w_command_line = Convert::ToWideString(strings::join(arguments.begin(), arguments.end(), ' '));
@@ -92,6 +98,6 @@ namespace Piston
             throw Injector::Exception("Failed to create process.");
         }
 
-        return Inject(library_path, process_info.dwProcessId);
+        return Inject(NormalizedPath, process_info.dwProcessId);
     }
 }

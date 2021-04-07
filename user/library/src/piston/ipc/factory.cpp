@@ -19,8 +19,14 @@ namespace Piston::IPC
 
         if(Entry != mMakers.end())
         {
-            auto Maker = Entry->second;
-            return Maker(Stream);
+            Message = Entry->second();
+            
+            if(Message->Deserialize(Stream))
+            {
+                return Message;
+            }
+            
+            Message.reset();
         }        
 
         return Message;

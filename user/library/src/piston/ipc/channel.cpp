@@ -11,37 +11,37 @@ namespace Piston::IPC
         return mTarget;
     }
 
-    void Channel::Send(const Message& message)
+    void Channel::Send(Message::PointerType Outgoing)
     {
-        mOutbox.push_back(message);
+        mOutbox.push_back(Outgoing);
     }
 
-    bool Channel::Receive(Message& message)
+    Message::PointerType Channel::Receive()
     {
         if(mInbox.size())
         {
-            message = mInbox.front();
+            auto Next = mInbox.front();
             mInbox.pop_front();
 
-            return true;
+            return Next;
         }
-        return false;
+        return Message::PointerType();
     }
 
-    void Channel::PushMessage(const Message& message)
+    void Channel::PushMessage(Message::PointerType Message)
     {
-        mInbox.push_back(message);
+        mInbox.push_back(Message);
     }
 
-    bool Channel::PopOutbox(Message& message)
+    Message::PointerType Channel::PopOutbox()
     {
         if(mOutbox.size())
         {
-            message = mOutbox.front();
+            auto Next = mOutbox.front();
             mOutbox.pop_front();
 
-            return true;
+            return Next;
         }
-        return false;
+        return Message::PointerType();
     }
 }

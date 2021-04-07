@@ -25,9 +25,9 @@ namespace Piston::IPC
             /**
              * @brief Called when a new channel is opened.
              * 
-             * @param channel New channel.
+             * @param NewChannel New channel.
              */
-            virtual void OnChannelOpened(const Channel& channel);
+            virtual void OnChannelOpened(Channel::PointerType NewChannel);
         };
 
         /**
@@ -47,10 +47,38 @@ namespace Piston::IPC
         Channel::PointerType OpenChannel(Process::IDType TargetProcessID);
 
         /**
+         * @brief List all currently open channels.
+         * 
+         * @return std::vector<Channel::PointerType> 
+         */
+        std::vector<Channel::PointerType> ListOpenChannels() const;
+
+        /**
+         * @brief Broadcast a message to all connected processes.
+         * 
+         * @param Message Message to be broadcast
+         */
+        void Broadcast(Message::PointerType Message);
+
+        /**
          * @brief Pumps the router, which sends outgoing messages and places incoming messages into their
          * corresponding channels' inboxes.
          */
         void Pump();
+
+        /**
+         * @brief Get the Message Factory used by the router to translate incoming data into Message objects
+         * 
+         * @return MessageFactory::PointerType 
+         */
+        MessageFactory::PointerType GetMessageFactory() const;
+
+        /**
+         * @brief Set the Message Factory used by the router to translate incoming data into Message objects
+         * 
+         * @param Factory New Message Factory
+         */
+        void SetMessageFactory(MessageFactory::PointerType Factory);
 
         /**
          * @brief Add a new router event listener
@@ -81,9 +109,11 @@ namespace Piston::IPC
         // Router event listeners
         std::vector<Listener*> mListeners;
         // Open channels
-        std::vector<Channel::PointerType> mChannels;
+        std::map<Process::IDType, Channel::PointerType> mChannels;
         // Platform router handle
         PlatformHandle* mHandle;
+        // Message Factory
+        MessageFactory::PointerType mMessageFactory;
     };
 }
 

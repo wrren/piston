@@ -11,7 +11,7 @@ namespace Piston::IPC
     public:
 
         typedef std::shared_ptr<MessageFactory> PointerType;
-        typedef std::function<Message::PointerType (std::istream&)> MessageMaker;
+        typedef std::function<Message::PointerType ()> MessageMaker;
 
         /**
          * @brief Register a message maker function.

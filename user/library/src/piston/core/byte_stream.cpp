@@ -2,12 +2,12 @@
 
 namespace Piston
 {
-    ByteStream::ByteBuffer::ByteBuffer(const byte* Data, size_t Size)
+    ByteStream::ByteBuffer::ByteBuffer(byte* Data, size_t Size)
     {
-        setg(Data, Data, Data + Size);
+        setg((char*) Data, (char*) Data, (char*) Data + Size);
     }
 
-    ByteStream::ByteStream(const byte* Data, size_t Size) :
+    ByteStream::ByteStream(byte* Data, size_t Size) :
     std::istream(&mBuffer),
     std::ostream(&mBuffer),
     mBuffer(Data, Size)

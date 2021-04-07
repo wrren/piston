@@ -3,7 +3,10 @@
 #include <cstdlib>
 #include <filesystem>
 #include <piston/process/injector.h>
+#include <piston/ipc/router.h>
+#include <piston/ipc/messages/log_message.h>
 #include <operations.h>
+#include <thread>
 
 void usage()
 {
@@ -11,6 +14,7 @@ void usage()
 	std::cout << "\tcli list" << std::endl;
 	std::cout << "\tcli open file" << std::endl;
 	std::cout << "\tcli load library" << std::endl;
+	std::cout << "\tcli listen router-id" << std::endl;
 	std::cout << "\tcli inject <library path> --into <process id>" << std::endl;
 
 	exit(EXIT_FAILURE);
@@ -29,6 +33,45 @@ int main(int argc, char** argv)
 	else if(argc >= 3 && !strcmp(argv[1], "load"))
 	{
 		Piston::cli::load(std::cout, std::cerr, argv[2]);
+	}
+	else if(argc >= 3 && !strcmp(argv[1], "listen"))
+	{
+		Piston::IPC::Router::IDType RouterID = argv[2];
+		auto ThisProcess = Piston::Process::CurrentProcess();
+		Piston::IPC::Router Router(ThisProcess->GetID(), RouterID);
+		Piston::IPC::LogMessage::RegisterWith(Router.GetMessageFactory());
+
+		size_t ChannelCount = 0;
+
+		while(true)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			Router.Pump();
+
+			auto OpenChannels = Router.ListOpenChannels();
+
+			if(OpenChannels.size() != ChannelCount)
+			{
+				ChannelCount = OpenChannels.size();
+				std::cout << "Channel Count: " << ChannelCount << std::endl;
+			}
+
+			for(auto Channel : OpenChannels)
+			{
+				while(auto Message = Channel->Receive())
+				{
+					if(Message->GetCommand() == Piston::IPC::LogMessage::Command)
+					{
+						auto LogMessage = std::reinterpret_pointer_cast<Piston::IPC::LogMessage>(Message);
+
+						if(LogMessage)
+						{
+							std::cout << "Received log message from process " << LogMessage->GetSourceProcessID() << ": " << LogMessage->GetMessage() << std::endl;
+						}
+					}
+				}
+			}
+		}
 	}
 	else if(argc >= 5 && !strcmp(argv[1], "inject") && !strcmp(argv[3], "--into"))
 	{

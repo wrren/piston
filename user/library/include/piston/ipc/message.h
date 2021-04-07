@@ -34,6 +34,20 @@ namespace Piston::IPC
         CommandType GetCommand() const;
 
         /**
+         * @brief Get the Source Process for this message
+         * 
+         * @return Process::IDType 
+         */
+        Process::IDType GetSourceProcessID() const;
+
+        /**
+         * @brief Set the Source Process ID for this message
+         * 
+         * @param ID Source Process ID
+         */
+        void SetSourceProcessID(Process::IDType ID);
+
+        /**
          * @brief Deserialize data from the given stream
          * 
          * @param stream Input stream

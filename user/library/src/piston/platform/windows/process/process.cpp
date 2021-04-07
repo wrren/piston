@@ -183,7 +183,8 @@ namespace Piston
 					{
 						if (GetModuleBaseName(process_handle, module_handle, process_name, sizeof(process_name) / sizeof(TCHAR)))
 						{
-							results.push_back(Process::PointerType(new Process(process_ids[i], (Process::NameType::value_type*) process_name)));
+							Process::NameType Name(&process_name[0], &process_name[0] + wcslen(process_name));
+							results.push_back(Process::PointerType(new Process(process_ids[i], Name)));
 						}
 					}
 				}

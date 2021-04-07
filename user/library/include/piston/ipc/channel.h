@@ -15,20 +15,20 @@ namespace Piston::IPC
         /**
          * @brief Send a message to the target process
          * 
-         * @param message Message to be sent
+         * @param Message Message to be sent
          * @return true If the message was sent successfully
          * @return false Otherwise
          */
-        void Send(const Message& message);
+        void Send(Message::PointerType Message);
 
         /**
          * @brief Receive a message from the channel's inbox
          * 
-         * @param message Mesage to be received
+         * @param Message Mesage to be received
          * @return true If there was a message in the inbox to be received
          *         false Otherwise
          */
-        bool Receive(Message& message);
+        Message::PointerType Receive();
 
         /**
          * @brief Get the target process for this channel
@@ -47,18 +47,18 @@ namespace Piston::IPC
         /**
          * @brief Push a new message onto this channel's inbox.
          * 
-         * @param message New message
+         * @param Message New message
          */
-        void PushMessage(const Message& message);
+        void PushMessage(Message::PointerType Message);
 
         /**
          * @brief Pop a message off the channel's outbox
          * 
-         * @param message Output message
+         * @param Message Output message
          * @return true If there were messages to be popped
          *         false Otherwise
          */
-        bool PopOutbox(Message& message);
+        Message::PointerType PopOutbox();
 
     private:
 
@@ -68,9 +68,9 @@ namespace Piston::IPC
         // Target Process ID
         Process::IDType mTarget;
         // Outgoing message queue
-        std::deque<Message> mOutbox;
+        std::deque<Message::PointerType> mOutbox;
         // Incoming message queue
-        std::deque<Message> mInbox;
+        std::deque<Message::PointerType> mInbox;
     };
 }
 

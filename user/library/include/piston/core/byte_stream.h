@@ -5,11 +5,11 @@
 
 namespace Piston
 {
-    class ByteStream : public std::istream, std::ostream
+    class ByteStream : public std::istream, public std::ostream
     {
     public:
 
-        class ByteBuffer  : public std::basic_streambuf<byte>
+        class ByteBuffer  : public std::basic_streambuf<char>
         {
         public:
 
@@ -19,7 +19,7 @@ namespace Piston
              * @param Data Data Buffer
              * @param Size Buffer Size
              */
-            ByteBuffer(const byte* Data, size_t Size);
+            ByteBuffer(byte* Data, size_t Size);
         };
 
         /**
@@ -28,7 +28,7 @@ namespace Piston
          * @param Data Data Buffer
          * @param Size Buffer Size
          */
-        ByteStream(const byte* Data, size_t Size);
+        ByteStream(byte* Data, size_t Size);
 
     private:
 
