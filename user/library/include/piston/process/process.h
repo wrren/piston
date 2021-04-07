@@ -108,6 +108,14 @@ namespace Piston
         static PointerType CurrentProcess();
 
         /**
+         * @brief Find the process with the specified ID.
+         * 
+         * @param ProcessID Target Process ID
+         * @return PointerType 
+         */
+        static PointerType FindByID(IDType ProcessID);
+
+        /**
          * @brief Find the process with the specified name.
          * 
          * @param name Name to search for

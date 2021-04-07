@@ -8,7 +8,7 @@ namespace Piston::Platform
 {
     typedef DWORD ProcessID;
 
-    typedef String ProcessName;
+    typedef WideString ProcessName;
 
     typedef HANDLE ThreadID;
 }

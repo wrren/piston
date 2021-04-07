@@ -1,6 +1,7 @@
 #include <piston/ipc/router.h>
 #include <piston/core/convert.h>
 #include <piston/core/byte_stream.h>
+#include <piston/ipc/messages/connect.h>
 #include <windows.h>
 
 #define PIPE_BUFFER_SIZE 8192
@@ -69,6 +70,7 @@ namespace Piston::IPC
                 {
                     Messages.push_back(NewMessage);
                 }
+
             }
         } while (GetLastError() != ERROR_NO_DATA);     
 

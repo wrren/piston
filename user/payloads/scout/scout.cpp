@@ -43,7 +43,11 @@ void RunIPC()
 
         while(IPCRunning)
         {
-            Router.Broadcast(Piston::IPC::Message::PointerType(new Piston::IPC::LogMessage("Broadcast from inside target process!")));
+            if(Router.ListOpenChannels().size())
+            {
+                Router.Broadcast(Piston::IPC::Message::PointerType(new Piston::IPC::LogMessage("Broadcast from inside target process!")));
+            }
+            
             Router.Pump();
             DebugPrint("Router Pumped");
             std::this_thread::sleep_for(std::chrono::seconds(5));

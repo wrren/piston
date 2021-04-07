@@ -1,7 +1,7 @@
 #ifndef PISTON_CORE_STRING_H
 #define PISTON_CORE_STRING_H
 
-#include <string>
+#include <piston/core/types.h>
 
 namespace Piston
 {
@@ -9,7 +9,7 @@ namespace Piston
      * @brief Provides utility functions for manipulating strings.
      * 
      */
-    class strings
+    class Strings
     {
     public:
 
@@ -18,27 +18,43 @@ namespace Piston
          * 
          * @tparam C String character type
          * @tparam I Iterator type
-         * @param start_iterator Start iterator
-         * @param end_iterator End iterator
-         * @param delimiter Delimiter character
+         * @param StartIterator Start iterator
+         * @param EndIterator End iterator
+         * @param Delimiter Delimiter character
          * @return std::basic_string<C> Joined string
          */
         template<typename C, typename I>
-        static std::basic_string<C> join(I start_iterator, I end_iterator, C delimiter)
+        static std::basic_string<C> Join(I StartIterator, I EndIterator, C Delimiter)
         {
-            std::basic_stringstream<C> stream;
-            for(auto it = start_iterator; it != end_iterator; it++)
+            std::basic_stringstream<C> Stream;
+            for(auto Iterator = StartIterator; Iterator != EndIterator; Iterator++)
             {
-                stream << *it;
-                auto next = it;
+                Stream << *Iterator;
+                auto Next = Iterator;
 
-                if(++next != end_iterator)
+                if(++Next != EndIterator)
                 {
-                    stream << delimiter;
+                    Stream << Delimiter;
                 }
             }
-            return stream.str();
+            return Stream.str();
         }
+
+        /**
+         * @brief Convert a single-byte character string to a wide string
+         * 
+         * @param Input Input String
+         * @return WideString 
+         */
+        static WideString StringToWideString(const String& Input);
+
+        /**
+         * @brief Convert a wide-character string to a single-byte character string
+         * 
+         * @param Input 
+         * @return String 
+         */
+        static String WideStringToString(const WideString& Input);
     };
 } // namespace Piston
 

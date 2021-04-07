@@ -5,11 +5,11 @@
 
 namespace Piston
 {
-    class ByteStream : public std::istream, public std::ostream
+    class ByteStream : public std::iostream
     {
     public:
 
-        class ByteBuffer  : public std::basic_streambuf<char>
+        class ByteBuffer  : public std::streambuf
         {
         public:
 

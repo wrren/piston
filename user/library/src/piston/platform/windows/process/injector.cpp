@@ -83,7 +83,7 @@ namespace Piston
 
         auto w_executable_path = Convert::ToWideString(executable_path.string());
         auto w_current_directory = Convert::ToWideString(executable_path.parent_path().string());
-        auto w_command_line = Convert::ToWideString(strings::join(arguments.begin(), arguments.end(), ' '));
+        auto w_command_line = Convert::ToWideString(Strings::Join(arguments.begin(), arguments.end(), ' '));
         
         WCHAR w_command_line_buf[MAX_PATH];
         wcscpy_s(w_command_line_buf, MAX_PATH, w_command_line.c_str());

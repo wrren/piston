@@ -2,7 +2,7 @@
 
 namespace Piston::IPC
 {
-    const Message::CommandType LogMessage::Command = 0;
+    const Message::CommandType LogMessage::Command = 1;
 
     LogMessage::LogMessage() :
     Message(Command)

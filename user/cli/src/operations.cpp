@@ -23,7 +23,7 @@ namespace Piston::cli
 
         for (auto process : processes)
         {
-            output_stream << std::setw(10) << std::left << process->GetID() << process->GetName() << std::endl;
+            output_stream << std::setw(10) << std::left << process->GetID() << Piston::Strings::WideStringToString(process->GetName()) << std::endl;
         }
     }
 

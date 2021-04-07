@@ -5,6 +5,7 @@
 #include <piston/process/injector.h>
 #include <piston/ipc/router.h>
 #include <piston/ipc/messages/log_message.h>
+#include <piston/ipc/messages/connect.h>
 #include <operations.h>
 #include <thread>
 
@@ -18,6 +19,18 @@ void usage()
 	std::cout << "\tcli inject <library path> --into <process id>" << std::endl;
 
 	exit(EXIT_FAILURE);
+}
+
+Piston::Process::PointerType GetProcessByIDOrName(const Piston::String& IDOrName)
+{
+	try
+	{
+		Piston::Process::IDType ProcessID = std::stoi(IDOrName);
+		return Piston::Process::FindByID(ProcessID);
+	}
+	catch(const std::invalid_argument&)
+	{
+		return Piston::Process::FindByName(Piston::Strings::StringToWideString(IDOrName));	}
 }
 
 int main(int argc, char** argv)
@@ -34,14 +47,33 @@ int main(int argc, char** argv)
 	{
 		Piston::cli::load(std::cout, std::cerr, argv[2]);
 	}
-	else if(argc >= 3 && !strcmp(argv[1], "listen"))
+	else if(argc >= 2 && !strcmp(argv[1], "target"))
+	{
+		uint32_t Health = 100;
+		while(true)
+		{
+			std::cout << "Update Health Value (Currently " << Health << ")" << std::endl;
+			std::cin >> Health;
+		}	
+	}
+	else if(argc >= 4 && !strcmp(argv[1], "listen"))
 	{
 		Piston::IPC::Router::IDType RouterID = argv[2];
 		auto ThisProcess = Piston::Process::CurrentProcess();
 		Piston::IPC::Router Router(ThisProcess->GetID(), RouterID);
 		Piston::IPC::LogMessage::RegisterWith(Router.GetMessageFactory());
 
-		size_t ChannelCount = 0;
+		auto TargetProcess = GetProcessByIDOrName(argv[3]);
+
+		if(!TargetProcess)
+		{
+			usage();
+		}
+
+		auto Channel = Router.OpenChannel(TargetProcess->GetID());
+		Channel->Send(Piston::IPC::Message::PointerType(new Piston::IPC::ConnectMessage()));
+
+		size_t ChannelCount = 1;
 
 		while(true)
 		{
@@ -86,32 +118,15 @@ int main(int argc, char** argv)
 
 		if(!std::filesystem::exists(executable_path))
 		{
-			try
-			{
-				Piston::Process::IDType process_id;
+			auto TargetProcess = GetProcessByIDOrName(argv[4]);
 
-				auto process = Piston::Process::FindByName(argv[4]);
-				if(process)
-				{
-					process_id = process->GetID();
-				}
-				else
-				{
-					size_t index;
-					process_id = std::stoi(argv[4], &index);
-					std::cout << index << ", " << argv[4] << std::endl;
-				}
-				
-				Piston::cli::inject_into_process(std::cout, std::cerr, library_path, process_id);
+			if(TargetProcess)
+			{
+				Piston::cli::inject_into_process(std::cout, std::cerr, library_path, TargetProcess->GetID());
 			}
-			catch(const std::invalid_argument&)
+			else
 			{
 				usage();
-			}
-			catch(const std::exception& e)
-			{
-				usage();
-				std::cerr << e.what() << std::endl;
 			}
 		}
 		else

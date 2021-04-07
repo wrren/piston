@@ -132,24 +132,46 @@ namespace Piston
 		return result;
 	}
 
-	Process::PointerType Process::FindByName(const Process::NameType& name)
+	Process::PointerType Process::FindByID(Process::IDType ProcessID)
 	{
-		auto w_name = Convert::ToWideString(name);
-		
 		PROCESSENTRY32 process_snapshot;
 		HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		process_snapshot.dwSize = sizeof(PROCESSENTRY32);
 
-		do
+		while (Process32Next(handle, &process_snapshot))
 		{
-			if (!_wcsicmp(process_snapshot.szExeFile, w_name.c_str()))
+			if (process_snapshot.th32ProcessID == ProcessID)
 			{
 				DWORD pid = process_snapshot.th32ProcessID;
 				CloseHandle(handle);
 
-				return Process::PointerType(new Process(pid, name));
+				Process::NameType ProcessName(&process_snapshot.szExeFile[0]);
+
+				return Process::PointerType(new Process(pid, ProcessName));
 			}
-		} while (Process32Next(handle, &process_snapshot));
+		}
+
+		CloseHandle(handle);
+
+		return Process::PointerType();
+	}
+
+	Process::PointerType Process::FindByName(const Process::NameType& ProcessName)
+	{	
+		PROCESSENTRY32 process_snapshot;
+		HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		process_snapshot.dwSize = sizeof(PROCESSENTRY32);
+
+		while (Process32Next(handle, &process_snapshot))
+		{
+			if (!_wcsicmp(process_snapshot.szExeFile, ProcessName.c_str()))
+			{
+				DWORD pid = process_snapshot.th32ProcessID;
+				CloseHandle(handle);
+
+				return Process::PointerType(new Process(pid, ProcessName));
+			}
+		}
 
 		CloseHandle(handle);
 
