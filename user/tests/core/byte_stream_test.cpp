@@ -9,7 +9,7 @@ TEST_CASE("Byte Stream", "[core]")
     uint32_t In = 1234, Out = 0;
 
     Stream << In;
-    Stream.seekg(0, Stream.beg);
+    Stream.Seek(0);
     Stream >> Out;
 
     REQUIRE(In == Out);

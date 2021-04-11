@@ -31,18 +31,18 @@ namespace Piston
         return mImageOptionalHeader;
     }
 
-    bool PEFile::Deserialize(std::istream& stream)
+    bool PEFile::Deserialize(Stream& InputStream)
     {
-        if(mDOSHeader.Deserialize(stream))
+        if(mDOSHeader.Deserialize(InputStream))
         {
-            stream.seekg(mDOSHeader.e_ifanew.GetValue());
+            InputStream.Seek(mDOSHeader.eIFANew.GetValue());
             uint32_t nt_signature;
-            stream.read(reinterpret_cast<char*>(&nt_signature), sizeof(nt_signature));
+            InputStream.ReadBuffer(reinterpret_cast<byte*>(&nt_signature), sizeof(nt_signature));
 
-            if(nt_signature == PISTON_PE_NT_SIGNATURE && mImageFileHeader.Deserialize(stream))
+            if(nt_signature == PISTON_PE_NT_SIGNATURE && mImageFileHeader.Deserialize(InputStream))
             {
                 mImageOptionalHeader.SetSize(mImageFileHeader.OptionalHeaderSize.GetValue());
-                return mImageOptionalHeader.Deserialize(stream);
+                return mImageOptionalHeader.Deserialize(InputStream);
             }            
         }
         return false;

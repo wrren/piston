@@ -34,10 +34,10 @@ namespace Piston::IPC
          * @brief Given an input stream, generate a message corresponding with the given message command
          * 
          * @param Command Message command ID
-         * @param Stream Input stream
+         * @param InputStream Input stream
          * @return Message::PointerType 
          */
-        Message::PointerType ToMessage(Message::CommandType Command, std::istream& Stream) const;
+        Message::PointerType ToMessage(Message::CommandType Command, Stream& InputStream) const;
 
     private:
 

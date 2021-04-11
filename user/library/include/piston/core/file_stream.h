@@ -1,25 +1,21 @@
-#ifndef PISTON_CORE_BYTE_STREAM_H
-#define PISTON_CORE_BYTE_STREAM_H
+#ifndef PISTON_CORE_FILE_STREAM_H
+#define PISTON_CORE_FILE_STREAM_H
 
 #include <piston/core/stream.h>
 
 namespace Piston
 {
-    /**
-     * @brief Stream implementation that reads into, and writes from, a provided buffer.
-     * 
-     */
-    class ByteStream : public Stream
+    class FileStream : public Stream
     {
     public:
-    
+
         /**
-         * @brief Construct a new Byte Stream that will read from and write to the target buffer
+         * @brief Construct a new File Stream object
          * 
-         * @param Buffer Buffer
-         * @param BufferSize Size of the buffer in bytes
+         * @param FilePath Path to the underlying file
+         * @param OpenMode File open mode
          */
-        ByteStream(byte* Buffer, PositionType BufferSize);
+        FileStream(const Path& FilePath, const char* OpenMode);
 
         /**
          * @brief Get the position representing the end of the stream.
@@ -27,6 +23,12 @@ namespace Piston
          * @return PositionType 
          */
         virtual PositionType End() const override;
+
+        /**
+         * @brief Destroy the File Stream object
+         * 
+         */
+        ~FileStream();
 
     protected:
 
@@ -52,11 +54,11 @@ namespace Piston
 
     private:
 
-        // Data buffer
-        byte* mBuffer = nullptr;
-        // Buffer size
-        PositionType mSize = 0;
+        // File Path
+        Path mPath;
+        // File Handle
+        FILE* mFileHandle = nullptr;
     };
 }
 
-#endif // PISTON_CORE_BYTE_STREAM_H
+#endif // PISTON_CORE_FILE_STREAM_H

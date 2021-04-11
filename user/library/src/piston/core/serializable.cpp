@@ -2,13 +2,13 @@
 
 namespace Piston
 {
-    bool Serializable::Deserialize(std::istream& stream)
+    bool Serializable::Deserialize(Stream& InputStream)
     {
-        return stream.good();
+        return InputStream.Good();
     }
 
-    bool Serializable::Serialize(std::ostream& stream) const
+    bool Serializable::Serialize(Stream& OutputStream) const
     {
-        return stream.good();
+        return OutputStream.Good();
     }
 }

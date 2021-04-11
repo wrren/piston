@@ -2,18 +2,26 @@
 
 namespace Piston::IPC
 {
-    const Message::CommandType ConnectMessage::Command = 0;
+    const Message::CommandType ConnectMessage::Command = Commands::CONNECT;
 
     ConnectMessage::ConnectMessage() :
     Message(ConnectMessage::Command)
     {}
 
-    bool ConnectMessage::Serialize(std::ostream& Stream) const
+    void ConnectMessage::RegisterWith(MessageFactory::PointerType Factory)
+    {
+        Factory->RegisterMessageMaker(ConnectMessage::Command, []()
+        {
+            return Message::PointerType(new ConnectMessage());
+        });
+    }
+
+    bool ConnectMessage::Serialize(Stream& OutputStream) const
     {
         return true;
     }
 
-    bool ConnectMessage::Deserialize(std::istream& Stream)
+    bool ConnectMessage::Deserialize(Stream& InputStream)
     {
         return true;
     }

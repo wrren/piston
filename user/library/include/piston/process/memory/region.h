@@ -4,10 +4,11 @@
 #include <cstdint>
 #include <vector>
 #include <piston/core/types.h>
+#include <piston/core/serializable.h>
 
 namespace Piston
 {
-    class MemoryRegion
+    class MemoryRegion : public Serializable
     {
     public:
 
@@ -17,6 +18,12 @@ namespace Piston
         typedef uint64_t SizeType;
         // Region list
         typedef std::vector<MemoryRegion> ListType;
+
+        /**
+         * @brief Construct a new Memory Region object
+         * 
+         */
+        MemoryRegion() = default;
 
         /**
          * @brief Construct a new memory region object with the given start and end addresses
@@ -55,6 +62,24 @@ namespace Piston
          * @return false Otherwise
          */
         bool OverlapsWith(const MemoryRegion& other) const;
+
+        /**
+         * @brief Deserialize data from the given stream
+         * 
+         * @param InputStream Input stream
+         * @return true If this object was deserialized correctly
+         * @return false Otherwise
+         */
+        virtual bool Deserialize(Stream& InputStream) override;
+
+        /**
+         * @brief Serialize data into the given stream
+         * 
+         * @param OutputStream Output stream
+         * @return true If this object was serialized correctly
+         * @return false Otherwise
+         */
+        virtual bool Serialize(Stream& OutputStream) const override;
 
     private:
 

@@ -3,28 +3,28 @@
 
 namespace Piston
 {
-    const uint16_t DOSHeader::k_magic = 0x5A4D;
+    const uint16_t DOSHeader::kMagic = 0x5A4D;
 
     DOSHeader::DOSHeader() :
-    e_magic(m_data, 0),
-    e_ifanew(m_data, 60)
+    eMagic(mData, 0),
+    eIFANew(mData, 60)
     {
-        memset(m_data, 0, DOS_HEADER_SIZE);
+        memset(mData, 0, DOS_HEADER_SIZE);
     }
 
-    bool DOSHeader::Deserialize(std::istream& stream)
+    bool DOSHeader::Deserialize(Stream& InputStream)
     {
-        return stream.read(reinterpret_cast<char*>(m_data), DOS_HEADER_SIZE).good();
+        return InputStream.ReadBuffer(mData, DOS_HEADER_SIZE);
     }
 
-    bool DOSHeader::Serialize(std::ostream& stream) const
+    bool DOSHeader::Serialize(Stream& OutputStream) const
     {
-        return stream.write(reinterpret_cast<const char*>(m_data), DOS_HEADER_SIZE).good();
+        return OutputStream.WriteBuffer(mData, DOS_HEADER_SIZE);
     }
 
     bool DOSHeader::IsValid() const
     {
-        return e_magic == k_magic;
+        return eMagic == kMagic;
     }
 
     size_t DOSHeader::Size() const 
@@ -34,12 +34,12 @@ namespace Piston
 
     Header::PointerType DOSHeader::Data() 
     {
-        return &(m_data[0]);
+        return &(mData[0]);
     }
 
     Header::ConstPointerType DOSHeader::Data() const 
     {
-        return &(m_data[0]);
+        return &(mData[0]);
     }
 
 }

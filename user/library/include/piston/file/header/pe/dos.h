@@ -13,12 +13,12 @@ namespace Piston
     public:
 
         // DOS MZ Magic Number
-        static const uint16_t k_magic;
+        static const uint16_t kMagic;
 
         // Magic Value
-        BufferRef<uint16_t> e_magic;
+        BufferRef<uint16_t> eMagic;
         // Offset to PE header
-        BufferRef<uint32_t> e_ifanew;
+        BufferRef<uint32_t> eIFANew;
 
         /**
          * @brief Construct a new DOS header
@@ -29,20 +29,20 @@ namespace Piston
         /**
          * @brief Deserialize a DOS header from the given stream
          * 
-         * @param stream Stream from which to deserialize the header data
+         * @param InputStream Stream from which to deserialize the header data
          * @return true If the data deserialized correctly
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& stream) override;
+        virtual bool Deserialize(Stream& InputStream) override;
 
         /**
          * @brief Serialize a DOS header to the given stream
          * 
-         * @param stream Stream into which to serialize the header data
+         * @param OutputStream Stream into which to serialize the header data
          * @return true If the data serialized correctly
          * @return false Otherwise
          */
-        virtual bool Serialize(std::ostream& stream) const override;
+        virtual bool Serialize(Stream& OutputStream) const override;
 
         /**
          * @brief Determine whether the contained DOS header data is valid
@@ -70,7 +70,7 @@ namespace Piston
     private:
 
         // Header Data
-        uint8_t m_data[DOS_HEADER_SIZE];
+        uint8_t mData[DOS_HEADER_SIZE];
     };
 }
 

@@ -127,6 +127,8 @@ namespace Piston
 			{
 				result.push_back(MemoryRegion(reinterpret_cast<MemoryRegion::AddressType>(memory_info.BaseAddress), memory_info.RegionSize));
 			}
+
+			start_address = (reinterpret_cast<byte*>(memory_info.BaseAddress) + memory_info.RegionSize);
 		}
 
 		return result;

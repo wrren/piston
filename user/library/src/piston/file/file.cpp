@@ -1,5 +1,6 @@
 #include <piston/file/file.h>
 #include <piston/core/format.h>
+#include <piston/core/file_stream.h>
 #include <fstream>
 
 namespace Piston
@@ -29,13 +30,9 @@ namespace Piston
             return false;
         }
 
-        std::fstream stream(mPath, std::fstream::in);
-        if(!stream.is_open())
-        {
-            return false;
-        }
+        FileStream Stream(mPath, "r");
 
-        return Deserialize(stream);
+        return Deserialize(Stream);
     }
 
     bool File::Write()
@@ -45,12 +42,8 @@ namespace Piston
             return false;
         }
 
-        std::fstream stream(mPath);
-        if(!stream.is_open())
-        {
-            return false;
-        }
+        FileStream Stream(mPath, "w");
 
-        return Serialize(stream);
+        return Serialize(Stream);
     }
 }

@@ -8,6 +8,8 @@ file(GLOB_RECURSE
     UNIVERSAL_SOURCES 
     src/piston/core/*.cpp 
     include/piston/core/*.h 
+    src/piston/core/log/*.cpp 
+    include/piston/core/log/*.h 
     src/piston/code/*.cpp 
     include/piston/code/*.h
     src/piston/file/*.cpp 

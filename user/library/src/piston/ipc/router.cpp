@@ -29,6 +29,8 @@ namespace Piston::IPC
             Listener->OnChannelOpened(NewChannel);
         }
 
+        PISTON_LOG_DEBUG("Opened new channel to process ", TargetProcess);
+
         return NewChannel;
     }
 
@@ -46,6 +48,8 @@ namespace Piston::IPC
 
     void Router::Broadcast(Message::PointerType Message)
     {
+        PISTON_LOG_DEBUG("Broadcasting message with command ", Message->GetCommand());
+
         for(auto& Entry : mChannels)
         {
             Entry.second->PushMessage(Message);

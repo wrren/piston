@@ -81,11 +81,11 @@ namespace Piston::cli
 
             if(!file.IsValid())
             {
-                error_stream << "PE file invalid. magic value: " << std::hex << file.GetDOSHeader().e_magic << ", expected " << std::hex << file.GetDOSHeader().k_magic << std::endl;
+                error_stream << "PE file invalid. magic value: " << std::hex << file.GetDOSHeader().eMagic << ", expected " << std::hex << file.GetDOSHeader().kMagic << std::endl;
                 return;
             }
 
-            output_stream << "PE file valid! PE Offset: " << std::hex << file.GetDOSHeader().e_ifanew << std::endl;
+            output_stream << "PE file valid! PE Offset: " << std::hex << file.GetDOSHeader().eIFANew << std::endl;
             output_stream << "Number of sections: " << file.GetImageFileHeader().NumberOfSections << std::endl;
             output_stream << "Timestamp: " << file.GetImageFileHeader().Timestamp << std::endl;
             output_stream << "Size of code: " << file.GetImageOptionalHeader().SizeOfCode.GetValue() << std::endl;

@@ -57,11 +57,11 @@ namespace Piston
         /**
          * @brief Deserialize PE Format data from the given stream
          * 
-         * @param stream Input Stream
+         * @param InputStream Input Stream
          * @return true If PE Format data was deserialized successfully.
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& stream) override;
+        virtual bool Deserialize(Stream& InputStream) override;
 
     private:
 

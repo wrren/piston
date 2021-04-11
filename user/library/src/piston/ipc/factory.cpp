@@ -12,7 +12,7 @@ namespace Piston::IPC
         return mMakers.find(Command) != mMakers.end();
     }
 
-    Message::PointerType MessageFactory::ToMessage(Message::CommandType Command, std::istream& Stream) const
+    Message::PointerType MessageFactory::ToMessage(Message::CommandType Command, Stream& InputStream) const
     {
         auto Message = Message::PointerType();
         auto Entry = mMakers.find(Command);
@@ -21,7 +21,7 @@ namespace Piston::IPC
         {
             Message = Entry->second();
             
-            if(Message->Deserialize(Stream))
+            if(Message->Deserialize(InputStream))
             {
                 return Message;
             }

@@ -3,6 +3,7 @@
 
 #include <piston/core/types.h>
 #include <piston/process/process.h>
+#include <piston/ipc/command.h>
 
 namespace Piston::IPC
 {
@@ -50,20 +51,20 @@ namespace Piston::IPC
         /**
          * @brief Deserialize data from the given stream
          * 
-         * @param stream Input stream
+         * @param InputStream Input stream
          * @return true If this object was deserialized correctly
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& stream) = 0;
+        virtual bool Deserialize(Stream& InputStream) = 0;
 
         /**
          * @brief Serialize data into the given stream
          * 
-         * @param stream Output stream
+         * @param OutputStream Output stream
          * @return true If this object was serialized correctly
          * @return false Otherwise
          */
-        virtual bool Serialize(std::ostream& stream) const = 0;
+        virtual bool Serialize(Stream& OutputStream) const = 0;
 
     private:
 

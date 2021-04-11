@@ -2,14 +2,41 @@
 
 namespace Piston
 {
-    ByteStream::ByteBuffer::ByteBuffer(byte* Data, size_t Size)
+    ByteStream::ByteStream(byte* Buffer, Stream::PositionType BufferSize) :
+    mBuffer(Buffer),
+    mSize(BufferSize)
+    {}
+
+    Stream::PositionType ByteStream::End() const
     {
-        setg((char*) Data, (char*) Data, (char*) Data + Size);
-        setp((char*) Data, (char*) Data, (char*) Data + Size);
+        return mSize;
     }
 
-    ByteStream::ByteStream(byte* Data, size_t Size) :
-    mBuffer(Data, Size),
-    std::iostream(&mBuffer)
-    {}
+    bool ByteStream::Write(const byte* Data, size_t DataSize)
+    {
+        auto Position = GetPosition();
+
+        if(Position + DataSize > mSize)
+        {
+            return false;
+        }
+
+        memcpy(mBuffer + Position, Data, DataSize);
+
+        return true;
+    }
+
+    bool ByteStream::Read(byte* Data, size_t DataSize) const
+    {
+        auto Position = GetPosition();
+
+        if(Position + DataSize > mSize)
+        {
+            return false;
+        }
+
+        memcpy(Data, mBuffer + Position, DataSize);
+
+        return true;
+    }
 }

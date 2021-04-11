@@ -1,8 +1,7 @@
 #ifndef PISTON_CORE_SERIALIZABLE_H
 #define PISTON_CORE_SERIALIZABLE_H
 
-#include <istream>
-#include <ostream>
+#include <piston/core/stream.h>
 
 namespace Piston
 {
@@ -13,20 +12,20 @@ namespace Piston
         /**
          * @brief Deserialize data from the given stream
          * 
-         * @param stream Input stream
+         * @param InputStream Input stream
          * @return true If this object was deserialized correctly
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& stream);
+        virtual bool Deserialize(Stream& InputStream);
 
         /**
          * @brief Serialize data into the given stream
          * 
-         * @param stream Output stream
+         * @param OutputStream Output stream
          * @return true If this object was serialized correctly
          * @return false Otherwise
          */
-        virtual bool Serialize(std::ostream& stream) const;
+        virtual bool Serialize(Stream& OutputStream) const;
     };
 }
 

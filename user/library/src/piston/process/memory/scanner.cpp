@@ -2,30 +2,40 @@
 
 namespace Piston
 {
-    MemoryScanner::ResultType MemoryScanner::ScanForBuffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const    
-    {
-        MemoryScanner::ResultType results;
+    MemoryBufferScanner::MemoryBufferScanner(const byte* TargetBuffer, size_t TargetBufferSize) :
+    mTargetBuffer(TargetBuffer),
+    mTargetBufferSize(TargetBufferSize)
+    {}
 
-        if(buffer_size == 0)
+    MemoryScanner::ResultType MemoryBufferScanner::Scan(const byte* Data, size_t DataSize) const
+    {
+        return ScanForBuffer(Data, DataSize, mTargetBuffer, mTargetBufferSize);
+    }
+
+    MemoryScanner::ResultType MemoryScanner::ScanForBuffer(const byte* Data, size_t DataSize, const void* Buffer, size_t BufferSize) const    
+    {
+        MemoryScanner::ResultType Results;
+
+        if(BufferSize == 0)
         {
-            return results;
+            return Results;
         }
 
-        size_t offset = 0;
+        size_t Offset = 0;
         
-        for(auto i = 0; i < data_size; i++)
+        for(auto i = 0; i < DataSize; i++)
         {
-            if((i + buffer_size) >= data_size)
+            if((i + BufferSize) > DataSize)
             {
                 break;
             }
 
-            if(memcmp(data + i, buffer, buffer_size) == 0)
+            if(memcmp(Data + i, Buffer, BufferSize) == 0)
             {
-                results.push_back(i);
+                Results.push_back(i);
             }
         }
 
-        return results;
+        return Results;
     }
 }

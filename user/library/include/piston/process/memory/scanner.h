@@ -18,24 +18,47 @@ namespace Piston
         /**
          * @brief Scan the given memory region for matches
          * 
-         * @param data Start of data buffer
-         * @param data_size Size of buffer in bytes
+         * @param Data Start of Data Buffer
+         * @param DataSize Size of Buffer in bytes
          * @return result_type Matches
          */
-        virtual ResultType Scan(const byte* data, size_t data_size) const = 0;
+        virtual ResultType Scan(const byte* Data, size_t DataSize) const = 0;
 
     protected:
 
         /**
-         * @brief Scan for the contents of the given memory buffer in the given region
+         * @brief Scan for the contents of the given memory Buffer in the given region
          * 
-         * @param data Start of input data
-         * @param data_size Size of input data in bytes
-         * @param buffer Buffer containing data to be scanned for
-         * @param buffer_size Size of the buffer
+         * @param Data Start of input Data
+         * @param DataSize Size of input Data in bytes
+         * @param Buffer Buffer containing Data to be scanned for
+         * @param BufferSize Size of the Buffer
          * @return result_type Matches
          */
-        ResultType ScanForBuffer(const byte* data, size_t data_size, const void* buffer, size_t buffer_size) const;
+        ResultType ScanForBuffer(const byte* Data, size_t DataSize, const void* Buffer, size_t BufferSize) const;
+    };
+
+    class MemoryBufferScanner : public MemoryScanner
+    {
+    public:
+
+        MemoryBufferScanner(const byte* TargetBuffer, size_t TargetBufferSize);
+
+        /**
+         * @brief Scan the given memory region for matches
+         * 
+         * @param Data Start of Data Buffer
+         * @param DataSize Size of Buffer in bytes
+         * @return result_type Matches
+         */
+        virtual ResultType Scan(const byte* Data, size_t DataSize) const override;
+
+    private:
+
+        // Target buffer
+        const byte* mTargetBuffer;
+        // Target buffer size
+        size_t mTargetBufferSize;
     };
 
     template<typename T, typename std::enable_if<std::is_pod<T>::value, T>::type = true>
@@ -58,9 +81,9 @@ namespace Piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual ResultType Scan(const byte* data, size_t data_size) const override
+        virtual ResultType Scan(const byte* Data, size_t DataSize) const override
         {
-            return ScanForBuffer(data, data_size, reinterpret_cast<const void*>(&mValue), sizeof(T));
+            return ScanForBuffer(Data, DataSize, reinterpret_cast<const void*>(&mValue), sizeof(T));
         }
 
     private:
@@ -99,15 +122,15 @@ namespace Piston
          * @param region Region to be scanned
          * @return result_type Matching regions
          */
-        virtual ResultType Scan(const byte* data, size_t data_size) const override
+        virtual ResultType Scan(const byte* Data, size_t DataSize) const override
         {
             MemoryScanner::ResultType results;
 
-            for(auto i = 0; i < data_size; i++)
+            for(auto i = 0; i < DataSize; i++)
             {
-                if((i + sizeof(T)) <= data_size)
+                if((i + sizeof(T)) <= DataSize)
                 {
-                    T value = *(reinterpret_cast<const T*>(data + i));
+                    T value = *(reinterpret_cast<const T*>(Data + i));
 
                     if( (mMode == CompareMode::COMPARE_EQUALS                 && value == mValue)    ||
                         (mMode == CompareMode::COMPARE_GREATER_THAN           && value > mValue)     ||

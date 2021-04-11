@@ -12,11 +12,11 @@ namespace Piston
         /**
          * @brief Deserialize a PE header from the given stream
          * 
-         * @param stream Stream from which to deserialize the header data
+         * @param InputStream Stream from which to deserialize the header data
          * @return true If the data deserialized correctly
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& stream) override;
+        virtual bool Deserialize(Stream& InputStream) override;
     };
 }
 

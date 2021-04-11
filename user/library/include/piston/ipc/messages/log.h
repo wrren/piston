@@ -43,20 +43,20 @@ namespace Piston::IPC
         /**
          * @brief Deserialize a log message from the given input stream
          * 
-         * @param Stream Input stream
+         * @param InputStream Input stream
          * @return true If the message was deserialized successfully
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& Stream) override;
+        virtual bool Deserialize(Stream& InputStream) override;
 
         /**
          * @brief Serialize a log message into the given output stream
          * 
-         * @param Stream Output stream
+         * @param OutputStream Output stream
          * @return true If the message was serialized successfully
          * @return false Otherwise
          */
-        virtual bool Serialize(std::ostream& Stream) const override;
+        virtual bool Serialize(Stream& OutputStream) const override;
 
     private:
 

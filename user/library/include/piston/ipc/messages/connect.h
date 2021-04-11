@@ -2,6 +2,7 @@
 #define PISTON_IPC_CONNECT_MESSAGE_H
 
 #include <piston/ipc/message.h>
+#include <piston/ipc/factory.h>
 
 namespace Piston::IPC
 {
@@ -19,22 +20,29 @@ namespace Piston::IPC
         ConnectMessage();
 
         /**
+         * @brief Register this message type with the given message factory.
+         * 
+         * @param Factory Message factory to register with.
+         */
+        static void RegisterWith(MessageFactory::PointerType Factory);
+
+        /**
          * @brief Serialize a ConnectMessage into the given stream
          * 
-         * @param Stream Output Stream
+         * @param OutputStream Output Stream
          * @return true If serialization was successful
          * @return false Otherwise
          */
-        virtual bool Serialize(std::ostream& Stream) const override;
+        virtual bool Serialize(Stream& OutputStream) const override;
 
         /**
          * @brief Deserialize a ConnectMessage from the given stream
          * 
-         * @param Stream Input Stream
+         * @param InputStream Input Stream
          * @return true If deserialization was successful
          * @return false Otherwise
          */
-        virtual bool Deserialize(std::istream& Stream) override;
+        virtual bool Deserialize(Stream& InputStream) override;
     };
 }
 

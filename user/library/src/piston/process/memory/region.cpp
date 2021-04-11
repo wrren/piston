@@ -28,4 +28,16 @@ namespace Piston
         return  (mStartAddress <= other.mStartAddress && (mStartAddress + mSize) >= other.mStartAddress) ||
                 (mStartAddress >= other.mStartAddress && mStartAddress <= (other.mStartAddress + other.mSize));
     }
+
+    bool MemoryRegion::Deserialize(Stream& InputStream)
+    {
+        InputStream >> mStartAddress >> mSize;
+        return InputStream.Good();
+    }
+
+    bool MemoryRegion::Serialize(Stream& OutputStream) const
+    {
+        OutputStream << mStartAddress << mSize;
+        return OutputStream.Good();
+    }
 }
